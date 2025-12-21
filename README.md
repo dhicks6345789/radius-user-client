@@ -19,7 +19,7 @@ This application is not affiliated with or endorsed in any way by Smoothwall or 
 ## Platforms
 This application is written in Go, and should be able to be compiled and run on most current platforms, including Windows, MacOS and Linux running on a variety of architectures (x86, amd64, arm64).
 
-The application is distributed as a simple, single Zip archive contaning all the executables and install scripts for each of the platforms supported.
+The application is distributed as a simple, single Zip archive contaning all the executables and install scripts for each of the platforms supported, as well as default/example config files.
 
 ## Installation
 To install on a single device, unpack the Zip file and run the install script for your platform (install.bat for Windows, install.sh for other platforms). On a managed network, you are probably going to want to unpack that Zip file into a central repository of some sort, modify the given configuration file to match your setup, then distribute from there.
@@ -29,6 +29,8 @@ On your Windows / MacOS / etc devices, you will need to have a config file holdi
 
 ### Configuration - RADIUS Server
 If you are using a Smoothwall appliance, you can configure the appliance itself to accept RADIUS accounting packets. This is quite simple, it should just be a simple check-box to click. Don't forget to also add the appropriate RADIUS port (probably 1813 for accounting) to the allow list in your Smoothwall's firewall configuration section.
+
+You will need to define a secret shared key on your RADIUS server for use by the client software. It is suggested you create a separate key for use by this application if possible, rather than re-using an existing one, just to keep some separation between applications.
 
 This application hasn't been tested with other RADIUS servers or filtering appliances, any feedback would be useful.
 
