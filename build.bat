@@ -6,7 +6,7 @@ rem go get github.com/nfnt/resize
 if not exist "..\RADIUSClient" mkdir "..\RADIUSClient"
 
 echo Building...
-go build client.go
+go build client.go 2>&1
 move client.exe ..\RADIUSClient
 
 rem copy webconsole.exe "C:\Program Files\WebConsole" > nul 2>&1
