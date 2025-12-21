@@ -15,3 +15,19 @@ This application was written to replace a vendor's ([Smoothwall](https://smoothw
 ## Suitibility
 
 This application is not affiliated with or endorsed in any way by Smoothwall or any other vendor, and no garuntee is made that it will function as intended on any given hardware or network configuration. It is written as quite a simple, single-file Go application, and should, hopefully, be auditable by internal deployment teams if needed.
+
+## Platforms
+
+This application is written in Go, and should be able to be compiled and run on most current platforms, including Windows, MacOS and Linux running on a variety of architectures (x86, amd64, arm64).
+
+The application is distributed as a simple, single Zip archive contaning all the executables and install scripts for each of the platforms supported.
+
+## Installation
+
+Unpack the Zip file and run the install script for your platform (install.bat for Windows, install.sh for other platforms).
+
+## Building
+
+If you want to build the application from the source code, build scripts (`build.bat`, `build.sh`) are included in the Git repository for both Windows and Linux. The whole build process is basically `git build client.go`.
+
+If you are building the client on a test machine, there are also included test scripts (`test.bat`, `test.sh`) which build the code then do a local deploy of the executables.
