@@ -1,6 +1,8 @@
 # RADIUS User Client
 A cross-platform client application to tell a RADIUS server the current user on a machine.
 
+Note: as of 21st December, 2025, this project is not completed or currently even compilable. The following documentation is more of a statement of intent than anything else.
+
 ## What This Application Is For
 This is a small client-side application, intended to run on workstations in a managed network environment (maybe a school or corporate office setup), where those workstations might be used by multiple users during a typical day. It aims to periodically update a central RADIUS server with the username of the current user using a device.
 
