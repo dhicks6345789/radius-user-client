@@ -18,13 +18,25 @@ This application is written in Go, and should be able to be compiled and run on 
 The application is distributed as a simple, single Zip archive contaning all the executables and install scripts for each of the platforms supported.
 
 ## Installation
-Unpack the Zip file and run the install script for your platform (install.bat for Windows, install.sh for other platforms).
+To install on a single device, unpack the Zip file and run the install script for your platform (install.bat for Windows, install.sh for other platforms). On a managed network, you are probably going to want to unpack that Zip file into a central repository of some sort, modify the given configuration file to match your setup, then distribute from there.
+
+### Configuration - Client Devices
+On your Windows / MacOS / etc devices, you will need to have a config file holding appropriate values for your network. You'll need the IP address of the RADIUS server, the shared secret provided by your RADIUS server, and the domain name you wish to append to the usernames.
+
+### Configuration - RADIUS Server
+If you are using a Smoothwall appliance, you can configure the appliance itself to accept RADIUS accounting packets. This is quite simple, it should just be a simple check-box to click. Don't forget to also add the appropriate RADIUS port (probably 1813 for accounting) to the allow list in your Smoothwall's firewall configuration section.
+
+This application hasn't been tested with other RADIUS servers or filtering appliances, any feedback would be useful.
 
 ## Usage Examples
 ### Windows Devices Using GCPW / pGina As a Login Provider
-For the particular situation this application was written for: We have a network of Windows devices, in our case running Windows 11 Education (similar to Windows 11 Enterprise for corporpate customers). These are devices in a school setting, mostly classroom machines used by teaching staff. As a school network we have a gateway-level filtering setup, a Smoothwall appliance, that can filter traffic to various levels and issue alerts in line with current safeguarding guidence. As part of that filtering process, it is important for us to understand which user has triggered a filtering block or alert. Therefore when a user logs in to a machine, that machine needs to tell the Smoothwall server which user has just logged in.
+For the particular situation this application was written for: We have a network of Windows devices, in our case running Windows 11 Education (similar to Windows 11 Enterprise for corporpate customers). These are devices in a school setting, mostly classroom machines used by teaching staff. As a school network we have a gateway-level filtering setup, a Smoothwall appliance, that can filter traffic to various levels and issue alerts in line with current safeguarding guidence. As part of that filtering process, it is important for us to understand which user has triggered a filtering block or alert. Therefore when a user logs in to a machine, that machine needs to tell the Smoothwall server which user has just logged in. To this end, Smoothwall produce a Windows client application that runs as a service and communicates the current user to the Smoothwall server whenever a new usr logs in.
 
-The current available Smoothwall client can handle Windows users logging in via a local Active Directory server.
+The current available Smoothwall client can handle Windows users logging in via a local Active Directory server, and also via a cloud-based AzureAD server. However, our machines use the [pGina](http://pgina.org/) login handler to allow users to log in with their credentials held in a Google Workspace instance (via Google's cloud LDAP service). Other schools use the [Google Credential Provider for Windows, (GCPW")](https://tools.google.com/dlpage/gcpw/), a solution that allows for direct login to Windows devices using Google authentication (although, due to a limitation with how Windows handles USB port permissions, it doesn't seem to allow for USB-based 2FA keys to be used, which was a problem in our particular setup).
+
+Both solutions work well, but result in what Windows sees as a "local" Windows account on the workstation. The Smoothwall client then reports this to the Smoothwall appliance in a format that doesn't match what the appliance is expecting - "TESTMACHINE01\t.user" instead of "t.user@example.com". The applince does still apply filtering (and, indeed, records the given username against requests in the logs), but using the default setting for unknown users. Users can log in using the appliances web-based login page if you have that configured, but if they don't then remember to log out using that same mechanism the next user of the machine will still be seen as them.
+
+Therefore, instead of deploying Smoothwall's Unified Client package to our workstations we deploy RADIUS User Client, which serves much the same function but communicates with the Smoothwall server via RADIUS and can transmit the username in a format that matches up with what the appliance is expecting.
 
 ## Building
 If you want to build the application from the source code, build scripts (`build.bat`, `build.sh`) are included in the Git repository for both Windows and Linux. The whole build process is basically `git build client.go`.
