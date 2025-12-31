@@ -72,7 +72,7 @@ func getCurrentUser() string {
 		fmt.Println("To do: figure out what to do if no user reported.")
 	} else {
 		fmt.Println(strings.Split(queryResult, " "))
-		username = strings.TrimSpace(strings.Split(queryResult, " ")[3])
+		username = strings.TrimSpace(strings.Split(queryResult, " ")[2])
 	}
 	return username
 }
