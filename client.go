@@ -107,7 +107,7 @@ func main() {
 	if configPath, configFound := arguments["config"]; configFound {
 		fmt.Println("Using config file: " + configPath)
 		for argName, argVal := range readConfigFile(configPath) {
-			arguments[argName] = argVal
+			arguments[argName] = [string]argVal
 		}
 	}
 
