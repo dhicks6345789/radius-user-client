@@ -43,7 +43,7 @@ func setArgumentIfPathExists(theArgument string, thePaths []string) {
 func readConfigFile(theConfigPath string) map[string]string {
 	// Map to store the parsed YAML data.
 	//var result map[string]interface{}
-	var result map[string]string{}
+	var result = map[string]string{}
 
 	// Read the YAML data from a file...
 	YAMLFileData, YAMLFileErr := ioutil.ReadFile(theConfigPath)
