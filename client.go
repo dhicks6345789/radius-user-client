@@ -6,6 +6,7 @@ import (
 	// Standard libraries.
 	"os";
 	"fmt";
+	"log";
 	"time";
 	"strings";
 	"io/ioutil";
@@ -50,7 +51,7 @@ func readConfigFile(theConfigPath string) map[string]string {
     }
 	
 	YAMLParseErr := yaml.Unmarshal(YAMLFileData, &result)
-	if err != nil {
+	if YAMLParseErr != nil {
 		log.Fatalf("Error parsing YAML config file: %v", YAMLParseErr)
 	}
 	
