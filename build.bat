@@ -1,23 +1,16 @@
 @echo off
-
+rem Get the version number from the repository...
 set /p VERSION=<VERSION
-echo The VERSION is: %VERSION%
-
-
-rem CURRENTDATE=`date +"%d/%m/%Y-%H:%M"`
+rem ...figure out the current date and time...
 for /f "tokens=2 delims==" %%a in ('wmic os get localdatetime /value') do set dt=%%a
-echo %dt%
 set YYYY=%dt:~0,4%
 set MM=%dt:~4,2%
 set DD=%dt:~6,2%
 set HH=%dt:~8,2%
 set NN=%dt:~10,2%
-
-set CURRENTDATE=%DD%/%MM%/%YYYY%-%HH%:%NN%
-echo The current date is: %CURRENTDATE%
-
-
-rem BUILDVERSION="$VERSION-local-$CURRENTDATE"
+rem ... and combine those to give a build version value.
+set BUILDVERSION=%VERSION%-local-%CURRENTDATE%
+echo %BUILDVERSION%
 
 if not exist "..\RADIUSClient" mkdir "..\RADIUSClient"
 
