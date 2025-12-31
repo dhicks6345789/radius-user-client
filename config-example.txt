@@ -1,1 +1,4 @@
-bananas: one
+# An example configuration file - replace with your own relevant values.
+server: radius.example.com # The address (domain name or IP address) of the RADIUS server.
+accountingPort: 1813 # The port number to use for RADIUS accounting. Defaults to 1813, some older servers might possibly use 1646.
+domain: example.com # The domain name to append to local usenames. So local username "t.user" would be reported to the RADIUS server as "t.user@example.com". Defaults to blank.
