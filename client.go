@@ -4,16 +4,20 @@ package main
 
 import (
 	// Standard libraries.
-	"os";
+	"os"
 	"os/exec"
-	"fmt";
-	"log";
-	"time";
-	"strings";
-	"io/ioutil";
+	"fmt"
+	"log"
+	"time"
+	"strings"
+	"io/ioutil"
 
-	// A Go YAML parser.
-	"gopkg.in/yaml.v3";
+	// A YAML parser.
+	"gopkg.in/yaml.v3"
+
+	// A RADIUS library.
+	"layeh.com/radius"
+	"layeh.com/radius/rfc2866"
 )
 
 // The current release version - value provided via the command line at compile time.
@@ -78,6 +82,31 @@ func getCurrentUser() string {
 	return username
 }
 
+// Sends a RADIUS accounting request to the specified server.
+func sendAccountingPacket(serverAddr, secret, username string, statusType rfc2866.AcctStatusType) error {
+	// 1. Create a new Accounting-Request packet
+	packet := radius.New(radius.CodeAccountingRequest, []byte(secret))
+	
+	// 2. Add standard attributes
+	// rfc2866 provides helper functions for standard accounting attributes
+	if err := rfc2866.UserName_SetString(packet, username); err != nil {
+		return err
+	}
+	if err := rfc2866.AcctStatusType_Set(packet, statusType); err != nil {
+		return err
+	}
+
+	// 3. Exchange the packet with the server
+	// This handles the UDP transmission and waiting for the Accounting-Response
+	response, err := radius.Exchange(context.Background(), packet, serverAddr)
+	if err != nil {
+		return err
+	}
+	
+	log.Printf("Received response from server: %v", response.Code)
+	return nil
+}
+
 // The main body of the program. This application can act as both a simple command-line application for sending a one-off RADIUS accounting packet to a given server, and as a service that can periodically check the current user.
 func main() {
 	// Set some default argument values.
@@ -136,5 +165,14 @@ func main() {
 		fmt.Println("Service code goes here.")
 	} else {
 		fmt.Println("Current user: " + getCurrentUser())
+		
+		// Example usage:
+		addr := "127.0.0.1:1813"
+		secret := "my-shared-secret"
+		
+		err := SendAccountingPacket(addr, secret, "john_doe", rfc2866.AcctStatusType_Values_Start)
+		if err != nil {
+			log.Fatalf("Failed to send packet: %v", err)
+		}
 	}
 }
