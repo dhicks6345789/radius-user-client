@@ -9,8 +9,9 @@ import (
 	"fmt";
 	"time";
 	"strings";
-excelize
-	csv	
+
+	// A Go YAML parser.
+	"gopkg.in/yaml.v3";
 )
 
 // The current release version - value provided at compile time.
@@ -38,9 +39,21 @@ func setArgumentIfPathExists(theArgument string, thePaths []string) {
 }
 
 func readConfigFile(theConfigPath string) map[string]string {
-	var result = map[string]string{}
+	//var result = map[string]string{}
+	// Map to store the parsed YAML data.
+	var result map[string]interface{}
+
+	// Unmarshal the YAML string into the data map
+	err := yaml.Unmarshal([]byte(os.ReadFile(theConfigPath)), &result)
+	if err != nil {
+		fmt.Println("Error reading YAML config file:" + err)
+	}
 	
-	go get gopkg.in/yaml.v3
+	//data, err := os.ReadFile(theConfigPath)
+    //if err != nil {
+		//log.Fatalf("Error reading YAML config file: %v", err)
+    //}
+	
 	return result
 }
 
