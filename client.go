@@ -63,7 +63,7 @@ func readConfigFile(theConfigPath string) map[string]string {
 // Get the current username from the system. Method used varies as to the system this client is running on.
 func getCurrentUser() string {
 	// Try "query user".
-	queryCmd := exec.Command("cmd", "/C", "query user")
+	queryCmd := exec.Command("cmd", "/C", "query user && exit 0")
 	queryOut, queryErr := queryCmd.CombinedOutput()
 	if queryErr != nil {
 		fmt.Println(string(queryOut))
