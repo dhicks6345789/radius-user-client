@@ -40,7 +40,7 @@ func setArgumentIfPathExists(theArgument string, thePaths []string) {
 }
 
 // A function to read a config file in YAML format. Returns a map[string]interface holding the config file's data.
-func readConfigFile(theConfigPath string) map[string]interface {
+func readConfigFile(theConfigPath string) map[string]interface{} {
 	// Map to store the parsed YAML data.
 	var result map[string]interface{}
 
