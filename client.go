@@ -64,12 +64,12 @@ func readConfigFile(theConfigPath string) map[string]string {
 func getCurrentUser() string {
 	// Try "query user".
 	queryCmd := exec.Command("cmd", "/C", "query user && exit 0")
-	queryOut, queryErr := queryCmd.CombinedOutput()
-	if queryErr != nil {
-		fmt.Println(string(queryOut))
-		log.Fatalf("Error running query user command: %v", queryErr)
+	queryOut, _ := queryCmd.CombinedOutput()
+	queryResult = strings.TrimSpace(string(queryOut))
+	if strings.HasPrefix(queryResult, "No User exists for") {
+		fmt.Println("To do: figure out what to do if no user reported.")
 	}
-	return strings.TrimSpace(string(queryOut))
+	return queryResult
 }
 
 // The main body of the program. This application can act as both a simple command-line application for sending a one-off RADIUS accounting packet to a given server, and as a service that can periodically check the current user.
