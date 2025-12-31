@@ -11,9 +11,9 @@ set YYYY=%dt:~0,4%
 set MM=%dt:~4,2%
 set DD=%dt:~6,2%
 set HH=%dt:~8,2%
-set MM=%dt:~10,2%
+set NN=%dt:~10,2%
 
-set CURRENTDATE=%DD%/%MM%/%YYYY%-%HH%:%MM%
+set CURRENTDATE=%DD%/%MM%/%YYYY%-%HH%:%NN%
 echo The current date is: %CURRENTDATE%
 
 
