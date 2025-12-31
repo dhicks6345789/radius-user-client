@@ -49,7 +49,7 @@ func readConfigFile(theConfigPath string) map[string]string {
 		log.Fatalf("Error reading YAML config file: %v", YAMLFileErr)
     }
 	
-	YAMLParseErr := yaml.Unmarshal(YAMLFileData), &result)
+	YAMLParseErr := yaml.Unmarshal(YAMLFileData, &result)
 	if err != nil {
 		log.Fatalf("Error parsing YAML config file: %v", YAMLParseErr)
 	}
