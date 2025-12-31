@@ -39,17 +39,18 @@ func setArgumentIfPathExists(theArgument string, thePaths []string) {
 	}
 }
 
-func readConfigFile(theConfigPath string) map[string]string {
-	//var result = map[string]string{}
+// A function to read a config file in YAML format. Returns a map[string]interface holding the config file's data.
+func readConfigFile(theConfigPath string) map[string]interface {
 	// Map to store the parsed YAML data.
 	var result map[string]interface{}
 
-	// Read the YAML data from a file and unmarshal it into the result data map.
+	// Read the YAML data from a file...
 	YAMLFileData, YAMLFileErr := ioutil.ReadFile(theConfigPath)
 	if YAMLFileErr != nil {
 		log.Fatalf("Error reading YAML config file: %v", YAMLFileErr)
     }
 	
+	// ...and unmarshal it into the result data map.
 	YAMLParseErr := yaml.Unmarshal(YAMLFileData, &result)
 	if YAMLParseErr != nil {
 		log.Fatalf("Error parsing YAML config file: %v", YAMLParseErr)
