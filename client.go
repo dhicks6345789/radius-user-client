@@ -5,6 +5,7 @@ package main
 import (
 	// Standard libraries.
 	"os";
+	"os/exec"
 	"fmt";
 	"log";
 	"time";
@@ -59,8 +60,15 @@ func readConfigFile(theConfigPath string) map[string]string {
 	return result
 }
 
+// Get the current username from the system. Method used varies as to the system this client is running on.
 func getCurrentUser() string {
-	return "Bananas"
+	// Try "query user".
+	queryCmd := exec.Command("query", "user")
+	queryOut, queryErr := queryCmd.CombinedOutput()
+	if queryErr != nil {
+		log.Fatalf("Error running query user command: %v", queryErr)
+	}
+	return strings.TrimSpace(string(queryOut))
 }
 
 // The main body of the program. This application can act as both a simple command-line application for sending a one-off RADIUS accounting packet to a given server, and as a service that can periodically check the current user.
