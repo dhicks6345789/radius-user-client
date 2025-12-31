@@ -69,7 +69,7 @@ func main() {
 	arguments["debug"] = "false"
 	arguments["service"] = "false"
 	arguments["accountingPort"] = "1813"
-	arguments["domain"] = "example.com"
+	arguments["domain"] = ""
 	setArgumentIfPathExists("config", []string {"config.txt", "/etc/radiususerclient/config.txt", "C:\\Program Files\\RadiusUserClient\\config.txt"})
 	
 	// Parse any command line arguments.
@@ -90,15 +90,12 @@ func main() {
 	if currentArgKey != "" {
 		arguments[strings.ToLower(currentArgKey[2:])] = "true"
 	}
-	
-	if arguments["service"] == "true" {
-		fmt.Println("RADIUS User Client v" + buildVersion + " - starting service. \"client --help\" for more details.")
-	}
+
+	fmt.Println("RADIUS User Client v" + buildVersion + ". \"client --help\" for more details.")
 	
 	// Print the help / usage documentation if the user wanted.
 	if arguments["help"] == "true" {
 		//           12345678901234567890123456789012345678901234567890123456789012345678901234567890
-		fmt.Println("RADIUS User Client v" + buildVersion + ".")
 		fmt.Println("")
 		fmt.Println("Documentation goes here.")
 		os.Exit(0)
@@ -120,8 +117,9 @@ func main() {
 	}
 	
 	if arguments["service"] == "true" {
+		fmt.Println("Running as service.")
 		fmt.Println("Service code goes here.")
-	} else if arguments["list"] == "true" {
+	} else {
 		fmt.Println("Other code goes here.")
 	}
 }
