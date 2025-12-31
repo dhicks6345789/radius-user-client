@@ -66,8 +66,7 @@ func getCurrentUser() string {
 	queryCmd := exec.Command("cmd", "/C", "query user")
 	queryOut, queryErr := queryCmd.CombinedOutput()
 	if queryErr != nil {
-		fmt.Println(queryOut)
-		fmt.Println(queryErr)
+		fmt.Println(string(queryOut))
 		log.Fatalf("Error running query user command: %v", queryErr)
 	}
 	return strings.TrimSpace(string(queryOut))
