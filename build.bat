@@ -2,7 +2,18 @@
 
 set /p VERSION=<VERSION
 echo The VERSION is: %VERSION%
+
+
 rem CURRENTDATE=`date +"%d/%m/%Y-%H:%M"`
+for /f "tokens=2 delims==" %%a in ('wmic os get localdatetime /value') do set dt=%%a
+set YYYY=%dt:~0,4%
+set MM=%dt:~4,2%
+set DD=%dt:~6,2%
+
+set CURRENTDATE=%YYYY%-%MM%-%DD%
+echo The current date is: %CURRENTDATE%
+
+
 rem BUILDVERSION="$VERSION-local-$CURRENTDATE"
 
 if not exist "..\RADIUSClient" mkdir "..\RADIUSClient"
