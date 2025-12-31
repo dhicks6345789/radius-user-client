@@ -71,6 +71,7 @@ func getCurrentUser() string {
 	if strings.HasPrefix(queryResult, "No User exists for") {
 		fmt.Println("To do: figure out what to do if no user reported.")
 	} else {
+		fmt.Println(strings.Split(queryResult, " "))
 		username = strings.TrimSpace(strings.Split(queryResult, " ")[3])
 	}
 	return username
