@@ -4,11 +4,11 @@ package main
 
 import (
 	// Standard libraries.
-	"io";
 	"os";
 	"fmt";
 	"time";
 	"strings";
+	"io/ioutil";
 
 	// A Go YAML parser.
 	"gopkg.in/yaml.v3";
@@ -43,16 +43,16 @@ func readConfigFile(theConfigPath string) map[string]string {
 	// Map to store the parsed YAML data.
 	var result map[string]interface{}
 
-	// Unmarshal the YAML string into the data map
-	err := yaml.Unmarshal([]byte(os.ReadFile(theConfigPath)), &result)
-	if err != nil {
-		fmt.Println("Error reading YAML config file:" + err)
-	}
+	// Read the YAML data from a file and unmarshal it into the result data map.
+	YAMLFileData, YAMLFileErr := ioutil.ReadFile(theConfigPath)
+	if YAMLFileErr != nil {
+		log.Fatalf("Error reading YAML config file: %v", YAMLFileErr)
+    }
 	
-	//data, err := os.ReadFile(theConfigPath)
-    //if err != nil {
-		//log.Fatalf("Error reading YAML config file: %v", err)
-    //}
+	YAMLParseErr := yaml.Unmarshal(YAMLFileData), &result)
+	if err != nil {
+		log.Fatalf("Error parsing YAML config file: %v", YAMLParseErr)
+	}
 	
 	return result
 }
