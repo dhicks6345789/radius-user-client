@@ -4,10 +4,10 @@ package main
 
 import (
 	// Standard libraries.
-	"io",
-	"os",
-	"fmt",
-	"time"
+	"io";
+	"os";
+	"fmt";
+	"time";
 )
 
 // The current release version - value provided at compile time.
