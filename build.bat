@@ -1,8 +1,11 @@
 @echo off
 
-source VERSION
-CURRENTDATE=`date +"%d/%m/%Y-%H:%M"`
-BUILDVERSION="$VERSION-local-$CURRENTDATE"
+rem source VERSION
+rem CURRENTDATE=`date +"%d/%m/%Y-%H:%M"`
+rem BUILDVERSION="$VERSION-local-$CURRENTDATE"
+
+for /f "tokens=2 delims==" %%a in ('findstr "version" VERSION') do set VERSION=%%a
+echo The VERSION is: %VERSION%
 
 if not exist "..\RADIUSClient" mkdir "..\RADIUSClient"
 
