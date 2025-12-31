@@ -65,7 +65,7 @@ func getCurrentUser() string {
 	// Try "query user".
 	queryCmd := exec.Command("cmd", "/C", "query user && exit 0")
 	queryOut, _ := queryCmd.CombinedOutput()
-	queryResult = strings.TrimSpace(string(queryOut))
+	queryResult := strings.TrimSpace(string(queryOut))
 	if strings.HasPrefix(queryResult, "No User exists for") {
 		fmt.Println("To do: figure out what to do if no user reported.")
 	}
