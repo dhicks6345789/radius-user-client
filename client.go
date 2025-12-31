@@ -15,7 +15,7 @@ import (
 	"gopkg.in/yaml.v3";
 )
 
-// The current release version - value provided at compile time.
+// The current release version - value provided via the command line at compile time.
 var buildVersion string
 
 // A map to store any arguments passed on the command line.
@@ -25,7 +25,7 @@ var arguments = map[string]string{}
 func debug(theOutput string) {
 	if arguments["debug"] == "true" {
 		currentTime := time.Now()
-		fmt.Println("webconsole,", currentTime.Format("02/01/2006:15:04:05"), "- " + theOutput)
+		fmt.Println("radius-user-client,", currentTime.Format("02/01/2006:15:04:05"), "- " + theOutput)
 	}
 }
 
@@ -39,13 +39,12 @@ func setArgumentIfPathExists(theArgument string, thePaths []string) {
 	}
 }
 
-// A function to read a config file in YAML format. Returns a map[string]interface holding the config file's data.
+// A function to read a config file in YAML format. Returns a map[string]string holding the config file's data.
 func readConfigFile(theConfigPath string) map[string]string {
 	// Map to store the parsed YAML data.
-	//var result map[string]interface{}
 	var result = map[string]string{}
 
-	// Read the YAML data from a file...
+	// Read the YAML data (just a bunch of strings) from a file...
 	YAMLFileData, YAMLFileErr := ioutil.ReadFile(theConfigPath)
 	if YAMLFileErr != nil {
 		log.Fatalf("Error reading YAML config file: %v", YAMLFileErr)
@@ -60,10 +59,12 @@ func readConfigFile(theConfigPath string) map[string]string {
 	return result
 }
 
-// The main body of the program - parse user-provided command-line paramaters, or start the main web server process.
+func getCurrentUser() string {
+	return "Bananas"
+}
+
+// The main body of the program. This application can act as both a simple command-line application for sending a one-off RADIUS accounting packet to a given server, and as a service that can periodically check the current user.
 func main() {
-	// This application can act as both a simple command-line application for sending a one-off RADIUS accounting packet to a given server, and as a service that can periodically check the current user.
-	
 	// Set some default argument values.
 	arguments["help"] = "false"
 	arguments["debug"] = "false"
@@ -96,12 +97,11 @@ func main() {
 	// Print the help / usage documentation if the user wanted.
 	if arguments["help"] == "true" {
 		//           12345678901234567890123456789012345678901234567890123456789012345678901234567890
-		fmt.Println("")
 		fmt.Println("Documentation goes here.")
 		os.Exit(0)
 	}
 	
-	// If we have an arument called "config", try and load the given config file.
+	// If we have an argument called "config", try and load the given config file.
 	if configPath, configFound := arguments["config"]; configFound {
 		fmt.Println("Using config file: " + configPath)
 		for argName, argVal := range readConfigFile(configPath) {
@@ -120,6 +120,6 @@ func main() {
 		fmt.Println("Running as service.")
 		fmt.Println("Service code goes here.")
 	} else {
-		fmt.Println("Other code goes here.")
+		fmt.Println("Current user: " + getCurrentUser())
 	}
 }
