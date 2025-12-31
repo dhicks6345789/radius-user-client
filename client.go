@@ -8,6 +8,9 @@ import (
 	"os";
 	"fmt";
 	"time";
+	"strings";
+excelize
+	csv	
 )
 
 // The current release version - value provided at compile time.
@@ -37,42 +40,7 @@ func setArgumentIfPathExists(theArgument string, thePaths []string) {
 func readConfigFile(theConfigPath string) map[string]string {
 	var result = map[string]string{}
 	
-	// Is the config file an Excel file?
-	if strings.HasSuffix(strings.ToLower(theConfigPath), "xlsx") {
-		excelFile, excelErr := excelize.OpenFile(theConfigPath)
-		if excelErr == nil {
-			excelSheetName := excelFile.GetSheetName(0)
-			excelCells, cellErr := excelFile.GetRows(excelSheetName)
-			if cellErr == nil {
-				fmt.Println(excelCells)
-			} else {
-				fmt.Println("ERROR: " + cellErr.Error())
-			}
-		} else {
-			fmt.Println("ERROR: " + excelErr.Error())
-		}
-	} else if strings.HasSuffix(strings.ToLower(theConfigPath), "csv") {
-		csvFile, csvErr := os.Open(theConfigPath)
-		if csvErr == nil {
-			csvData := csv.NewReader(csvFile)
-			for {
-				csvDataRecord, csvDataErr := csvData.Read()
-				if csvDataErr == io.EOF {
-					break
-				}
-				if csvDataErr != nil {
-					fmt.Println("ERROR: " + csvDataErr.Error())
-				} else {
-					csvDataField := strings.ToLower(csvDataRecord[0])
-					if csvDataField != "parameter" && !strings.HasPrefix(csvDataField, "#") {
-						result[csvDataField] = csvDataRecord[1]
-					}
-				}
-			}
-		} else {
-			fmt.Println("ERROR: " + csvErr.Error())
-		}
-	}
+	go get gopkg.in/yaml.v3
 	return result
 }
 
