@@ -164,8 +164,11 @@ func main() {
 		fmt.Println("Running as service.")
 		fmt.Println("Service code goes here.")
 	} else {
-		// Figure out the current username of the logged-in user.
+		// Figure out the current username of the logged-in user, with appended domain if defined.
 		username := getCurrentUser()
+		if arguments["domain"] != "" {
+			username = username + "@" + arguments["domain"]
+		}
 		fmt.Println("Current user: " + username)
 
 		// Send the username to the RADIUS server.
