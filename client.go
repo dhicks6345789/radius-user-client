@@ -179,7 +179,7 @@ func main() {
 		addr := "127.0.0.1:1813"
 		secret := "my-shared-secret"
 		
-		err := sendAccountingPacket(addr, secret, "john_doe", rfc2866.AcctStatusType_Values_Start)
+		err := sendAccountingPacket(addr, secret, "john_doe", rfc2866.AcctStatusType_Value_Start)
 		if err != nil {
 			log.Fatalf("Failed to send packet: %v", err)
 		}
