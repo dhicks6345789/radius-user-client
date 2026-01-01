@@ -92,9 +92,9 @@ func sendAccountingPacket(serverAddr string, secret string, username string, sta
 	
 	// Set accounting attributes.
 	rfc2866.AcctStatusType_Add(packet, statusType)
-	rfc2866.AcctSessionID_SetString(packet, "unique-session-id-123")
+	//rfc2866.AcctSessionID_SetString(packet, "unique-session-id-123")
 	rfc2865.UserName_SetString(packet, username)
-	rfc2865.NASIdentifier_SetString(packet, "nas-device-1)
+	//rfc2865.NASIdentifier_SetString(packet, "nas-device-1")
 	//rfc2865.NASIPAddress_Set(packet, net.ParseIP("192.168.1.10"))
 
 	// 3. Exchange the packet with the server - waits for a response.
