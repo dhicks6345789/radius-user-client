@@ -17,9 +17,9 @@ if not exist "..\RADIUSClient" mkdir "..\RADIUSClient"
 
 rem Module installation.
 //go get -u gopkg.in/yaml.v3 2>&1
-go install gopkg.in/yaml.v3@latest 2>&1
+go install gopkg.in/yaml.v3 2>&1
 //go get -u layeh.com/radius 2>&1
-go install layeh.com/radius@latest 2>&1
+go install layeh.com/radius 2>&1
 
 echo Building version: %BUILDVERSION%...
 erase ..\RADIUSClient\client.exe 2>&1
