@@ -16,9 +16,9 @@ set BUILDVERSION=%VERSION%-local-%CURRENTDATE%
 if not exist "..\RADIUSClient" mkdir "..\RADIUSClient"
 
 rem Module installation.
-go mod download gopkg.in/yaml.v3 2>&1
+rem go mod download gopkg.in/yaml.v3 2>&1
+go get -u gopkg.in/yaml.v3 2>&1
 go get -u layeh.com/radius 2>&1
-rem go mod download layeh.com/radius 2>&1
 
 echo Building version: %BUILDVERSION%...
 rem go build client.go 2>&1
