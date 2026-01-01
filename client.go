@@ -17,6 +17,7 @@ import (
 
 	// A RADIUS library.
 	"layeh.com/radius"
+	"layeh.com/radius/rfc2865"
 	"layeh.com/radius/rfc2866"
 )
 
@@ -84,17 +85,24 @@ func getCurrentUser() string {
 
 // Sends a RADIUS accounting request to the specified server.
 func sendAccountingPacket(serverAddr, secret, username string, statusType rfc2866.AcctStatusType) error {
-	// 1. Create a new Accounting-Request packet
+	// Create a new RADIUS accounting packet
 	packet := radius.New(radius.CodeAccountingRequest, []byte(secret))
+	
+	// Set accounting attributes
+	rfc2866.AcctStatusType_Add(packet, rfc2866.AcctStatusType_Value_Start)
+	rfc2866.AcctSessionID_SetString(packet, "unique-session-id-123")
+	rfc2865.UserName_SetString(packet, "john.doe")
+	rfc2865.NASIdentifier_SetString(packet, "nas-device-1")
+	rfc2865.NASIPAddress_Set(packet, net.ParseIP("192.168.1.10"))
 	
 	// 2. Add standard attributes
 	// rfc2866 provides helper functions for standard accounting attributes
-	if err := rfc2866.UserName_SetString(packet, username); err != nil {
-		return err
-	}
-	if err := rfc2866.AcctStatusType_Set(packet, statusType); err != nil {
-		return err
-	}
+	//if err := rfc2866.UserName_SetString(packet, username); err != nil {
+		//return err
+	//}
+	//if err := rfc2866.AcctStatusType_Set(packet, statusType); err != nil {
+		//return err
+	//}
 
 	// 3. Exchange the packet with the server
 	// This handles the UDP transmission and waiting for the Accounting-Response
