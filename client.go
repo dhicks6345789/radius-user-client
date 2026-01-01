@@ -86,28 +86,18 @@ func getCurrentUser() string {
 }
 
 // Sends a RADIUS accounting request to the specified server.
-func sendAccountingPacket(serverAddr, secret, username string, statusType rfc2866.AcctStatusType) error {
-	// Create a new RADIUS accounting packet
+func sendAccountingPacket(serverAddr string, secret string, username string, statusType rfc2866.AcctStatusType) error {
+	// Create a new RADIUS accounting packet.
 	packet := radius.New(radius.CodeAccountingRequest, []byte(secret))
 	
-	// Set accounting attributes
-	rfc2866.AcctStatusType_Add(packet, rfc2866.AcctStatusType_Value_Start)
+	// Set accounting attributes.
+	rfc2866.AcctStatusType_Add(packet, statusType)
 	rfc2866.AcctSessionID_SetString(packet, "unique-session-id-123")
-	rfc2865.UserName_SetString(packet, "john.doe")
-	rfc2865.NASIdentifier_SetString(packet, "nas-device-1")
+	rfc2865.UserName_SetString(packet, username)
+	rfc2865.NASIdentifier_SetString(packet, "nas-device-1)
 	//rfc2865.NASIPAddress_Set(packet, net.ParseIP("192.168.1.10"))
-	
-	// 2. Add standard attributes
-	// rfc2866 provides helper functions for standard accounting attributes
-	//if err := rfc2866.UserName_SetString(packet, username); err != nil {
-		//return err
-	//}
-	//if err := rfc2866.AcctStatusType_Set(packet, statusType); err != nil {
-		//return err
-	//}
 
-	// 3. Exchange the packet with the server
-	// This handles the UDP transmission and waiting for the Accounting-Response
+	// 3. Exchange the packet with the server - waits for a response.
 	response, err := radius.Exchange(context.Background(), packet, serverAddr)
 	if err != nil {
 		return err
@@ -174,15 +164,14 @@ func main() {
 		fmt.Println("Running as service.")
 		fmt.Println("Service code goes here.")
 	} else {
-		fmt.Println("Current user: " + getCurrentUser())
-		
-		// Example usage:
-		addr := "127.0.0.1:1813"
-		secret := "my-shared-secret"
-		
-		err := sendAccountingPacket(addr, secret, "john_doe", rfc2866.AcctStatusType_Value_Start)
-		if err != nil {
-			log.Fatalf("Failed to send packet: %v", err)
+		// Figure out the current username of the logged-in user.
+		username := getCurrentUser()
+		fmt.Println("Current user: " + username)
+
+		// Send the username to the RADIUS server.
+		RADIUSErr := sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, rfc2866.AcctStatusType_Value_Start)
+		if RADIUSErr != nil {
+			log.Fatalf("Failed to send packet: %v", RADIUSErr)
 		}
 	}
 }
