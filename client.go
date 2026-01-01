@@ -71,7 +71,7 @@ func getCurrentUser() string {
 	username := ""
 	
 	// Try "query user".
-	queryCmd := exec.Command("cmd", "/C", "query user && exit 0")
+	queryCmd := exec.Command("cmd", "/C", "query user")
 	queryOut, _ := queryCmd.CombinedOutput()
 	queryResult := strings.TrimSpace(string(queryOut))
 	if strings.HasPrefix(queryResult, "No User exists for") {
@@ -83,6 +83,19 @@ func getCurrentUser() string {
 		username = strings.Fields(queryResult)[8]
 	}
 	return username
+}
+
+func getCurrentIPAddress() string {
+	IPAddress := ""
+
+	// Try "ipconfig".
+	ipconfigCmd := exec.Command("cmd", "/C", "ipconfig")
+	ipconfigOut, _ := ipconfigCmd.CombinedOutput()
+	ipconfigResult := strings.TrimSpace(string(ipconfigOut))
+		fmt.Printf("%q\n", strings.Fields(ipconfigResult))
+		//IPAddress = strings.Fields(queryResult)[8]
+	}
+	return IPAddress
 }
 
 // Sends a RADIUS accounting request to the specified server.
@@ -170,6 +183,10 @@ func main() {
 			username = username + "@" + arguments["domain"]
 		}
 		fmt.Println("Current user: " + username)
+
+		// Figure out the IP address of this device, which we need to pass to the RADIUS server.
+		IPAddress := getCurrentIPAddress()
+		fmt.Println("Current IP Address: " + IPAddress)
 
 		// Send the username to the RADIUS server.
 		RADIUSErr := sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, rfc2866.AcctStatusType_Value_Start)
