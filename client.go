@@ -89,7 +89,7 @@ func getCurrentIPAddress() string {
 	IPAddress := ""
 
 	// Try "ipconfig".
-	ipconfigCmd := exec.Command("cmd", "/C", "ipconfig")
+	ipconfigCmd := exec.Command("cmd", "/C", "ipconfig | findstr /c:\"IPv4\"")
 	ipconfigOut, _ := ipconfigCmd.CombinedOutput()
 	ipconfigResult := strings.TrimSpace(string(ipconfigOut))
 	fmt.Printf("%q\n", strings.Fields(ipconfigResult))
