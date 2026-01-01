@@ -93,7 +93,7 @@ func sendAccountingPacket(serverAddr, secret, username string, statusType rfc286
 	rfc2866.AcctSessionID_SetString(packet, "unique-session-id-123")
 	rfc2865.UserName_SetString(packet, "john.doe")
 	rfc2865.NASIdentifier_SetString(packet, "nas-device-1")
-	rfc2865.NASIPAddress_Set(packet, net.ParseIP("192.168.1.10"))
+	//rfc2865.NASIPAddress_Set(packet, net.ParseIP("192.168.1.10"))
 	
 	// 2. Add standard attributes
 	// rfc2866 provides helper functions for standard accounting attributes
