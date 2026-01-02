@@ -127,6 +127,8 @@ func main() {
 	arguments["debug"] = "false"
 	arguments["service"] = "false"
 	arguments["accountingPort"] = "1813"
+	arguments["username"] = ""
+	arguments["ipaddress"] = ""
 	arguments["domain"] = ""
 	setArgumentIfPathExists("config", []string {"config.txt", "/etc/radiususerclient/config.txt", "C:\\Program Files\\RadiusUserClient\\config.txt"})
 	
@@ -166,6 +168,19 @@ func main() {
 		}
 	}
 
+	// Figure out the username of the current user, unless specifically overridden by a provided command-line parameter.
+	if arguments["username"] == "" {
+		arguments["username"] = getCurrentUser()
+		if arguments["domain"] != "" {
+			arguments["username"] = arguments["username"] + "@" + arguments["domain"]
+		}
+	}
+
+	// Figure out the IP address of the current device, unless specifically overridden by a provided command-line parameter.
+	if arguments["ipaddress"] == "" {
+		arguments["ipaddress"] = getCurrentIPAddress()
+	}
+
 	if arguments["debug"] == "true" {
 		fmt.Println("Debug mode set - arguments:")
 		for argName, argVal := range arguments {
@@ -177,19 +192,8 @@ func main() {
 		fmt.Println("Running as service.")
 		fmt.Println("Service code goes here.")
 	} else {
-		// Figure out the current username of the logged-in user, with appended domain if defined.
-		username := getCurrentUser()
-		if arguments["domain"] != "" {
-			username = username + "@" + arguments["domain"]
-		}
-		fmt.Println("Current user: " + username)
-
-		// Figure out the IP address of this device, which we need to pass to the RADIUS server.
-		IPAddress := getCurrentIPAddress()
-		fmt.Println("Current IP Address: " + IPAddress)
-
-		// Send the username to the RADIUS server.
-		RADIUSErr := sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, rfc2866.AcctStatusType_Value_Start)
+		// Send the username and IP address to the RADIUS server.
+		RADIUSErr := sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], arguments["username"], rfc2866.AcctStatusType_Value_Start)
 		if RADIUSErr != nil {
 			log.Fatalf("Failed to send packet: %v", RADIUSErr)
 		}
