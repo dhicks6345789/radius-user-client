@@ -1,8 +1,8 @@
 @echo off
 
-BUILDNAME=%1
+set BUILDNAME=%1
 if "%1"=="" (
-  BUILDNAME=test
+  set BUILDNAME=test
 )
 
 rem Get the version number from the repository...
@@ -25,9 +25,15 @@ go get -u gopkg.in/yaml.v3 2>&1
 rem The Go RADIUS library.
 go get -u layeh.com/radius 2>&1
 
-echo Building version: %BUILDVERSION%...
+rem Clear out previous builds.
 erase ..\RADIUSClient\client.exe 2>&1
-go build -ldflags "-X main.buildVersion=%BUILDVERSION%" client.go 2>&1
-move client.exe ..\RADIUSClient 2>&1
+erase ..\RADIUSClient.zip 2>&1
 
-tar -a -c -f ..\RADIUSClient.zip ..\RADIUSClient 2>&1
+echo Building version: %BUILDVERSION%...
+go build -ldflags "-X main.buildVersion=%BUILDVERSION%" client.go 2>&1
+
+if exist client.exe (
+  echo Build succesful - creating Zip archive...
+  move client.exe ..\RADIUSClient 2>&1
+  tar -a -c -f ..\RADIUSClient.zip ..\RADIUSClient 2>&1
+)
