@@ -49,7 +49,5 @@ if exist client.exe (
   if "%BUILDNAME%"=="main" (
     set ZIPNAME=RADIUSClient
   )
-  echo zipname
-  echo !ZIPNAME!
-  tar -a -c -f "..\%ZIPNAME%.zip" ..\RADIUSClient 2>&1
+  tar -a -c -f "..\!ZIPNAME!.zip" ..\RADIUSClient 2>&1
 )
