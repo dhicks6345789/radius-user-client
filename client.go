@@ -171,9 +171,9 @@ func main() {
 	// Figure out the username of the current user, unless specifically overridden by a provided command-line parameter.
 	if arguments["username"] == "" {
 		arguments["username"] = getCurrentUser()
-		if arguments["domain"] != "" {
-			arguments["username"] = arguments["username"] + "@" + arguments["domain"]
-		}
+	}
+	if arguments["domain"] != "" {
+		arguments["username"] = arguments["username"] + "@" + arguments["domain"]
 	}
 
 	// Figure out the IP address of the current device, unless specifically overridden by a provided command-line parameter.
