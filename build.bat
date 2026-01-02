@@ -27,11 +27,15 @@ go get -u layeh.com/radius 2>&1
 
 rem Clear out previous builds.
 erase ..\RADIUSClient\client.exe 2>&1
-erase ..\RADIUSClient.zip 2>&1
+erase ..\*.zip 2>&1
+if "%BUILDNAME%"=="main" (
+  erase ..\RADIUSClient\config.txt 2>&1
+)
 
 rem Copy over an example config file, but only if the user hasn't already provided their own.
 if not exist ..\RADIUSClient\config.txt (
-    copy config-example.txt ..\RADIUSClient\config.txt
+  echo Existing config file not found - copying default example version over.
+  copy config-example.txt ..\RADIUSClient\config.txt
 )
 
 echo Building version: %BUILDVERSION%...
@@ -40,5 +44,10 @@ go build -ldflags "-X main.buildVersion=%BUILDVERSION%" client.go 2>&1
 if exist client.exe (
   echo Build succesful - creating Zip archive...
   move client.exe ..\RADIUSClient 2>&1
-  tar -a -c -f ..\RADIUSClient.zip ..\RADIUSClient 2>&1
+  if "%BUILDNAME%"=="main" (
+    set ZIPNAME=RADIUSClient
+  ) else (
+    set ZIPNAME=RADIUSClient-%BUILDNAME%
+  )
+  tar -a -c -f ..\%ZIPNAME%.zip ..\RADIUSClient 2>&1
 )
