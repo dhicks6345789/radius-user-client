@@ -83,6 +83,9 @@ func getCurrentUser() string {
 		// fmt.Printf("%q\n", strings.Fields(queryResult))
 		username = strings.Fields(queryResult)[8]
 	}
+	if arguments["domain"] != "" {
+		username  = username + "@" + arguments["domain"]
+	}
 	return username
 }
 
@@ -168,18 +171,17 @@ func main() {
 			arguments[argName] = argVal
 		}
 	}
-
+	
 	// Figure out the username of the current user, unless specifically overridden by a provided command-line parameter.
+	username := arguments["username"]
 	if arguments["username"] == "" {
-		arguments["username"] = getCurrentUser()
-	}
-	if arguments["domain"] != "" {
-		arguments["username"] = arguments["username"] + "@" + arguments["domain"]
+		username = getCurrentUser()
 	}
 
 	// Figure out the IP address of the current device, unless specifically overridden by a provided command-line parameter.
+	ipaddress := arguments["ipaddress"]
 	if arguments["ipaddress"] == "" {
-		arguments["ipaddress"] = getCurrentIPAddress()
+		ipaddress = getCurrentIPAddress()
 	}
 
 	if arguments["debug"] == "true" {
@@ -191,13 +193,24 @@ func main() {
 	
 	if arguments["service"] == "true" || arguments["daemon"] == "true" {
 		debug("Running as service / daemon.")
+		oldUsername := ""
 		for {
-			debug("Tick.")
+			if arguments["username"] == "" {
+				username = getCurrentUser()
+			}
+			if oldUsername != username {
+				// Send the username and IP address to the RADIUS server.
+				RADIUSErr := sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
+				if RADIUSErr != nil {
+					debug("Failed to send packet to RADIUS server.")
+				}
+				oldUsername = username
+			}
 			time.Sleep(30 * time.Second)
 		}
 	} else {
 		// Send the username and IP address to the RADIUS server.
-		RADIUSErr := sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], arguments["username"], arguments["ipaddress"], rfc2866.AcctStatusType_Value_Start)
+		RADIUSErr := sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
 		if RADIUSErr != nil {
 			log.Fatalf("Failed to send packet: %v", RADIUSErr)
 		}
