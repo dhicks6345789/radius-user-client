@@ -104,15 +104,13 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 	// Create a new RADIUS accounting packet.
 	packet := radius.New(radius.CodeAccountingRequest, []byte(secret))
 	
-	// Set accounting attributes.
+	// Set accounting attributes as expected by Smoothwall.
+	// Other filters / gateways might expect different / additional fields - device ID (possibly the device MAC address) or a unique session ID of some sort.
 	rfc2866.AcctStatusType_Add(packet, statusType)
 	rfc2865.UserName_SetString(packet, username)
 	rfc2865.FramedIPAddress_Add(packet, net.ParseIP(IPAddress))
-	//rfc2866.AcctSessionID_SetString(packet, "unique-session-id-123")
-	//rfc2865.NASIdentifier_SetString(packet, "nas-device-1")
 	
-
-	// 3. Exchange the packet with the server - waits for a response.
+	// Exchange the packet with the server - waits for a response.
 	response, err := radius.Exchange(context.Background(), packet, serverAddr)
 	if err != nil {
 		return err
