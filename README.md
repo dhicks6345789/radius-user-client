@@ -19,6 +19,8 @@ This application is not affiliated with or endorsed in any way by Smoothwall or 
 ## Platforms
 This application is written in Go, and should be able to be compiled and run on most current platforms, including Windows, MacOS and Linux running on a variety of architectures (x86, amd64, arm64).
 
+The mechanisms used to get the current user and IP address on the client-side vary for each platform, so while the executable might compile and run on a given platform it might not actually be able to get the username and/or IP address properly. If that is so, it should still be usable as a command-line utility where you can specify the username and IP address as parameters yourself.
+
 The application is distributed as a simple, single Zip archive contaning all the executables and install scripts for each of the platforms supported, as well as default/example config files.
 
 ## Installation
@@ -53,3 +55,12 @@ As part of the login process, the remote desktop gateway could use RADIUS User C
 If you want to build the application from the source code, build scripts (`build.bat`, `build.sh`) are included in the Git repository for both Windows and Linux. The whole build process is basically `git build client.go`.
 
 If you are building the client on a test machine, there are also included test scripts (`test.bat`, `test.sh`) which build the code then do a local deploy of the executables.
+
+## Command-Line Usage
+`client \[--help\] \[--debug\] [--username value] [--ipaddress value]`
+
+* --help
+* --debug
+* --username
+* --ipaddress
+* --service
