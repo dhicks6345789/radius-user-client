@@ -1,10 +1,6 @@
 @echo off
 echo Starting install...
 
-set VERSION=0.1-alpha
-set key=
-set subdomain=
-
 rem Parse any parameters.
 :paramLoop
 if "%1"=="" goto paramContinue
@@ -20,30 +16,27 @@ shift
 goto paramLoop
 :paramContinue
 
-rem Stop any existing running services.
-net stop WebConsole > nul 2>&1
+rem Stop any existing running service.
+net stop RADIUSUserClient > nul 2>&1
 
-echo Downloading Web Console v%VERSION% binary...
-mkdir "C:\Program Files\WebConsole" > nul 2>&1
-powershell -command "& {&'Invoke-WebRequest' -Uri https://github.com/dhicks6345789/web-console/releases/download/v%VERSION%/win-amd64.exe -OutFile 'C:\Program Files\WebConsole\webconsole.exe'}"
+rem Make sure the install folder exists.
+mkdir "C:\Program Files\RADIUSUserClient" > nul 2>&1
 
-echo Downloading Web Console v%VERSION% support files...
-powershell -command "& {&'Invoke-WebRequest' -Uri https://github.com/dhicks6345789/web-console/archive/v%VERSION%.zip -OutFile supportFiles.zip}"
-powershell -command "Expand-Archive -Path supportFiles.zip"
-erase supportFiles.zip
+rem Copy the executable and config file.
+copy client.exe "C:\Program Files\RADIUSUserClient" > nul 2>&1
+copy config.txt "C:\Program Files\RADIUSUserClient" > nul 2>&1
 
-mkdir "C:\Program Files\WebConsole\www" > nul 2>&1
-mkdir "C:\Program Files\WebConsole\tasks" > nul 2>&1
-xcopy /E /Y supportFiles\web-console-%VERSION%\www "C:\Program Files\WebConsole\www" > nul 2>&1
+rem Set permissions on the config file so that only local admin accounts can read it.
+icacls "C:\Program Files\RADIUSUserClient\config.txt" /reset
+icacls "C:\Program Files\RADIUSUserClient\config.txt" /inheritance:r
+icacls "C:\Program Files\RADIUSUserClient\config.txt" /remove:g * /T /C
+icacls "C:\Program Files\RADIUSUserClient\config.txt" /grant Administrators:(F) /T /C
 
-echo Setting up WebConsole as a Windows service...
-supportFiles\nssm-2.24\win64\nssm install WebConsole "C:\Program Files\WebConsole\webconsole.exe" > nul 2>&1
-supportFiles\nssm-2.24\win64\nssm set WebConsole DisplayName "Web Console" > nul 2>&1
-supportFiles\nssm-2.24\win64\nssm set WebConsole AppNoConsole 1 > nul 2>&1
-supportFiles\nssm-2.24\win64\nssm set WebConsole Start SERVICE_AUTO_START > nul 2>&1
-net start WebConsole
+echo Setting up RADIUSUserClient as a Windows service...
+nssm install RADIUSUserClient "C:\Program Files\RADIUSUserClient\.bat" > nul 2>&1
+nssm set RADIUSUserClient DisplayName "RADIUS User Client" > nul 2>&1
+nssm set RADIUSUserClient AppNoConsole 1 > nul 2>&1
+nssm set RADIUSUserClient Start SERVICE_AUTO_START > nul 2>&1
+net start RADIUSUserClient
 
-echo Allowing the WebConsole service through the (local) Windows firewall...
-netsh.exe advfirewall firewall add rule name="WebConsole" program="C:\Program Files\WebConsole\webconsole.exe" protocol=tcp dir=in enable=yes action=allow profile="private,domain,public" > nul 2>&1
-
-rmdir /S /Q supportFiles > nul 2>&1
+echo Done.
