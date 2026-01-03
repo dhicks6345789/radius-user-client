@@ -72,4 +72,16 @@ The username / ipaddress options are probably more useful for testing or possibl
 In most use cases, you will want to install the client as a service / daemon, where it will inform the RADIUS server of the current username associated with the device it is running on.
 
 ## Config File
-The executable expects to find a file called config.txt containing some basic configuration values. This file is a simple YAML file, with `variable:value` style pairs. An example config file is provided:
+The executable expects to find a file called config.txt containing some basic configuration values. This file is a simple YAML file, with `variable:value` style pairs. An [example config file](https://github.com/dhicks6345789/radius-user-client/blob/main/config-example.txt) is provided in the source repository, and should be copied and modified to fit your particular settings.
+
+`server: radius.example.com`
+The address (domain name or IP address) of the RADIUS server.
+
+`accountingPort: 1813`
+The port number to use for RADIUS accounting. Defaults to 1813, some older servers might possibly use 1646.
+
+`secret: shared-secret-goes-here`
+The shared secret value provided by your RADIUS server.
+
+`domain: example.com`
+The domain name to append to local usenames. So local username "t.user" would be reported to the RADIUS server as "t.user@example.com". Defaults to blank - remove this entry to have usernames reported as-is.
