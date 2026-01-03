@@ -23,6 +23,8 @@ The mechanisms used to get the current user and IP address on the client-side va
 
 The application is distributed as a simple, single Zip archive contaning all the executables and install scripts for each of the platforms supported, as well as default/example config files.
 
+Written in Go, the executable should be self-contained, with no external requirements (runtime libraries and so on), other than its own (very basic) config file. As such, it should be able to be used on minimal VMs designed for cloud computing.
+
 ## Installation
 To install on a single device, unpack the Zip file and run the install script for your platform (install.bat for Windows, install.sh for other platforms). On a managed network, you are probably going to want to unpack that Zip file into a central repository of some sort, modify the given configuration file to match your setup, then distribute from there.
 
@@ -68,3 +70,6 @@ If you are building the client on a test machine, there are also included test s
 The username / ipaddress options are probably more useful for testing or possibly as part of a remote gateway solution - you can inform the RADIUS server of the username associated with any IP address you like, it doesn't have to be the machine the client is running on.
 
 In most use cases, you will want to install the client as a service / daemon, where it will inform the RADIUS server of the current username associated with the device it is running on.
+
+## Config File
+The executable expects to find a file called config.txt containing some basic configuration values. This file is a simple YAML file, with `variable:value` style pairs. An example config file is provided:
