@@ -57,10 +57,14 @@ If you want to build the application from the source code, build scripts (`build
 If you are building the client on a test machine, there are also included test scripts (`test.bat`, `test.sh`) which build the code then do a local deploy of the executables.
 
 ## Command-Line Usage
-`client \[--help\] \[--debug\] [--username value] [--ipaddress value]`
+`client \[--username value\] \[--ipaddress value\] \[--service|daemon\] \[--debug\] \[--help\]`
 
-* --help
-* --debug
-* --username
-* --ipaddress
-* --service
+* --username: The username of the user using the device. If not defined, the client will try and figure out the current username.
+* --ipaddress: The IP address of the device. If not defined, the client will try and figure out the current IP address.
+* --service: Run in service / daemon mode. If run from the command line in this mode, the client will simply sit in a loop checking the current username every 30 seconds. Use the appropriate included install script to install as a Windows service (install.bat) /  Linux (or MacoOS / Unix) daemon (install.sh).
+* --debug: Print debug information during execution.
+* --help: Displays a help message.
+
+The username / ipaddress options are probably more useful for testing or possibly as part of a remote gateway solution - you can inform the RADIUS server of the username associated with any IP address you like, it doesn't have to be the machine the client is running on.
+
+In most use cases, you will want to install the client as a service / daemon, where it will inform the RADIUS server of the current username associated with the device it is running on.
