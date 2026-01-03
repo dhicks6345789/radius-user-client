@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"fmt"
 	"log"
+	"net"
 	"time"
 	"strings"
 	"context"
@@ -108,8 +109,7 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 	//rfc2866.AcctSessionID_SetString(packet, "unique-session-id-123")
 	rfc2865.UserName_SetString(packet, username)
 	//rfc2865.NASIdentifier_SetString(packet, "nas-device-1")
-	//rfc2865.NASIPAddress_Set(packet, net.ParseIP("192.168.1.10"))
-	rfc2865.NASIPAddress_Set(packet, IPAddress)
+	rfc2865.NASIPAddress_Set(packet, net.ParseIP(IPAddress))
 
 	// 3. Exchange the packet with the server - waits for a response.
 	response, err := radius.Exchange(context.Background(), packet, serverAddr)
