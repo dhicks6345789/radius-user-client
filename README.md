@@ -44,6 +44,11 @@ Both solutions work well, but result in what Windows sees as a "local" Windows a
 
 Therefore, instead of deploying Smoothwall's Unified Client package to our workstations we deploy RADIUS User Client, which serves much the same function but communicates with the Smoothwall server via RADIUS and can transmit the username in a format that matches up with what the appliance is expecting.
 
+### RADIUS Notification Utility As Part Of A Remote Desktop Gateway
+We provide our users with web-based a [remote desktop gateway](https://github.com/dhicks6345789/remote-gateway) solution, so users can log in to a familier desktop environment from pretty much any device able to run a web browser. The servers running the remote desktops are hosted on-site, behind our filtering gateway (Smoothwall), with external access provided, in this example, by a [Cloudflare Zero-Trust Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/). Being behind the filtering gateway, network access from the remote desktop is filtered by the gateway, so even remote users get a consistant filtering policy applied.
+
+As part of the login process, the remote desktop gateway could use RADIUS User Client to inform the Smoothwall server which user has just logged in to a particular remote machine. Individual users can be assigned individual machines, which might work quite nicely in an education environment for access to Raspberry Pi or similar devices - your users (school pupils) can have full root access to a Linux instance, be able to access that instance (using their existing school login details via seemless SSO) from any location, inside or outside the school, and filtering policies would still be applied. Remote desktops on shared machines would need more work - filtering gateways such as Smoothwall's tend to work by applying filtering policies to IP addresses, so you would need an IP address per user to be able to distinguish individual users.
+
 ## Building
 If you want to build the application from the source code, build scripts (`build.bat`, `build.sh`) are included in the Git repository for both Windows and Linux. The whole build process is basically `git build client.go`.
 
