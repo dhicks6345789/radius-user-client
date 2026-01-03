@@ -99,7 +99,7 @@ func getCurrentIPAddress() string {
 }
 
 // Sends a RADIUS accounting request to the specified server.
-func sendAccountingPacket(serverAddr string, secret string, username string, statusType rfc2866.AcctStatusType) error {
+func sendAccountingPacket(serverAddr string, secret string, username string, IPAddress string, statusType rfc2866.AcctStatusType) error {
 	// Create a new RADIUS accounting packet.
 	packet := radius.New(radius.CodeAccountingRequest, []byte(secret))
 	
@@ -109,6 +109,7 @@ func sendAccountingPacket(serverAddr string, secret string, username string, sta
 	rfc2865.UserName_SetString(packet, username)
 	//rfc2865.NASIdentifier_SetString(packet, "nas-device-1")
 	//rfc2865.NASIPAddress_Set(packet, net.ParseIP("192.168.1.10"))
+	rfc2865.NASIPAddress_Set(packet, IPAddress)
 
 	// 3. Exchange the packet with the server - waits for a response.
 	response, err := radius.Exchange(context.Background(), packet, serverAddr)
@@ -193,7 +194,7 @@ func main() {
 		fmt.Println("Service code goes here.")
 	} else {
 		// Send the username and IP address to the RADIUS server.
-		RADIUSErr := sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], arguments["username"], rfc2866.AcctStatusType_Value_Start)
+		RADIUSErr := sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], arguments["username"], arguments["ipaddress"], rfc2866.AcctStatusType_Value_Start)
 		if RADIUSErr != nil {
 			log.Fatalf("Failed to send packet: %v", RADIUSErr)
 		}
