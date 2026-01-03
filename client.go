@@ -126,6 +126,7 @@ func main() {
 	arguments["help"] = "false"
 	arguments["debug"] = "false"
 	arguments["service"] = "false"
+	arguments["daemon"] = "false"
 	arguments["accountingPort"] = "1813"
 	arguments["username"] = ""
 	arguments["ipaddress"] = ""
@@ -188,9 +189,12 @@ func main() {
 		}
 	}
 	
-	if arguments["service"] == "true" {
-		fmt.Println("Running as service.")
-		fmt.Println("Service code goes here.")
+	if arguments["service"] == "true" || arguments["daemon"] == "true" {
+		debug("Running as service / daemon.")
+		for {
+			debug("Tick.")
+			time.Sleep(30 * time.Second)
+		}
 	} else {
 		// Send the username and IP address to the RADIUS server.
 		RADIUSErr := sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], arguments["username"], arguments["ipaddress"], rfc2866.AcctStatusType_Value_Start)
