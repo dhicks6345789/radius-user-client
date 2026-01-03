@@ -57,7 +57,7 @@ If you want to build the application from the source code, build scripts (`build
 If you are building the client on a test machine, there are also included test scripts (`test.bat`, `test.sh`) which build the code then do a local deploy of the executables.
 
 ## Command-Line Usage
-`client \[--username value\] \[--ipaddress value\] \[--service|daemon\] \[--debug\] \[--help\]`
+`client [--username value] [--ipaddress value] [--service|daemon] [--debug] [--help]`
 
 * --username: The username of the user using the device. If not defined, the client will try and figure out the current username.
 * --ipaddress: The IP address of the device. If not defined, the client will try and figure out the current IP address.
