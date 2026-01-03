@@ -39,6 +39,9 @@ if not exist ..\RADIUSClient\config.txt (
   copy config-example.txt ..\RADIUSClient\config.txt
 )
 
+rem Copy over the install scripts.
+copy install.bat ..\RADIUSClient 2>&1
+
 echo Building version: %BUILDVERSION%...
 go build -ldflags "-X main.buildVersion=%BUILDVERSION%" client.go 2>&1
 
