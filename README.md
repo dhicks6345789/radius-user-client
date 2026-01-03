@@ -54,7 +54,7 @@ We provide our users with web-based a [remote desktop gateway](https://github.co
 As part of the login process, the remote desktop gateway could use RADIUS User Client to inform the Smoothwall server which user has just logged in to a particular remote machine. Individual users can be assigned individual machines, which might work quite nicely in an education environment for access to Raspberry Pi or similar devices - your users (school pupils) can have full root access to a Linux instance, be able to access that instance (using their existing school login details via seemless SSO) from any location, inside or outside the school, and filtering policies would still be applied. Remote desktops on shared machines would need more work - filtering gateways such as Smoothwall's tend to work by applying filtering policies to IP addresses, so you would need an IP address per user to be able to distinguish individual users.
 
 ## Building
-If you want to build the application from the source code, build scripts (`build.bat`, `build.sh`) are included in the Git repository for both Windows and Linux. The whole build process is basically `git build client.go`.
+If you want to build the application from the source code, build scripts (`build.bat`, `build.sh`) are included in the Git repository for both Windows and Linux. The whole build process is basically `go build client.go`.
 
 If you are building the client on a test machine, there are also included test scripts (`test.bat`, `test.sh`) which build the code then do a local deploy of the executables.
 
