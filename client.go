@@ -115,12 +115,13 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 	rfc2865.FramedIPAddress_Add(packet, net.ParseIP(IPAddress))
 	
 	// Exchange the packet with the server - waits for a response.
+	debug("Sending to RADIUS server - username: " + username + ", IP address: " + IPAddress + ".")
 	response, RADIUSErr := radius.Exchange(context.Background(), packet, serverAddr)
 	if RADIUSErr != nil {
 		debug(fmt.Sprintf("Failed to send packet to RADIUS server: %v", RADIUSErr))
+	} else {
+		debug(fmt.Sprintf("Received response from server: %v", response.Code))
 	}
-	
-	debug(fmt.Sprintf("Received response from server: %v", response.Code))
 }
 
 // The main body of the program. This application can act as both a simple command-line application for sending a one-off RADIUS accounting packet to a given server, and as a service that can periodically check the current user.
