@@ -19,13 +19,11 @@ set CURRENTDATE=%DD%/%MM%/%YYYY%-%HH%:%NN%
 rem ... and combine those to give a build version value.
 set BUILDVERSION=%VERSION%-%BUILDNAME%-%CURRENTDATE%
 
-if not exist "..\RADIUSClient" (
-  mkdir "..\RADIUSClient"
-  mkdir "..\RADIUSClient\NSSM"
-  mkdir "..\RADIUSClient\NSSM\2.24"
-  mkdir "..\RADIUSClient\NSSM\2.24\win32"
-  mkdir "..\RADIUSClient\NSSM\2.24\win64"
-)
+mkdir "..\RADIUSClient" >nul 2>&1
+mkdir "..\RADIUSClient\NSSM" >nul 2>&1
+mkdir "..\RADIUSClient\NSSM\2.24" >nul 2>&1
+mkdir "..\RADIUSClient\NSSM\2.24\win32" >nul 2>&1
+mkdir "..\RADIUSClient\NSSM\2.24\win64" >nul 2>&1
 
 rem The Go YAML library.
 go get -u gopkg.in/yaml.v3 2>&1
