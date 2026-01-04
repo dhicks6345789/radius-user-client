@@ -217,7 +217,7 @@ func main() {
 					sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
 					oldUsername = username
 				}
-				time.Sleep(userCheckInterval * time.Second)
+				time.Sleep(time.Duration(userCheckInterval) * time.Second)
 			}
 		}
 	} else {
