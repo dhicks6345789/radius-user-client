@@ -11,6 +11,7 @@ import (
 	"net"
 	"time"
 	"strings"
+	"strconv"
 	"context"
 	"io/ioutil"
 
@@ -103,7 +104,7 @@ func getCurrentIPAddress() string {
 }
 
 // Sends a RADIUS accounting request to the specified server.
-func sendAccountingPacket(serverAddr string, secret string, username string, IPAddress string, statusType rfc2866.AcctStatusType) error {
+func sendAccountingPacket(serverAddr string, secret string, username string, IPAddress string, statusType rfc2866.AcctStatusType) {
 	// Create a new RADIUS accounting packet.
 	packet := radius.New(radius.CodeAccountingRequest, []byte(secret))
 	
@@ -116,11 +117,11 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 	// Exchange the packet with the server - waits for a response.
 	response, err := radius.Exchange(context.Background(), packet, serverAddr)
 	if err != nil {
-		return err
+		debug("Failed to send packet to RADIUS server.")
 	}
 	
-	log.Printf("Received response from server: %v", response.Code)
-	return nil
+	//log.Printf("Received response from server: %v", response.Code)
+	debug("Received response from server: " + response.Code)
 }
 
 // The main body of the program. This application can act as both a simple command-line application for sending a one-off RADIUS accounting packet to a given server, and as a service that can periodically check the current user.
@@ -134,6 +135,8 @@ func main() {
 	arguments["username"] = ""
 	arguments["ipaddress"] = ""
 	arguments["domain"] = ""
+	arguments["userCheckInterval"] = "30"
+	arguments["serverSendInterval"] = "4"
 	setArgumentIfPathExists("config", []string {"config.txt", "/etc/radiususerclient/config.txt", "C:\\Program Files\\RadiusUserClient\\config.txt"})
 	
 	// Parse any command line arguments.
@@ -184,6 +187,11 @@ func main() {
 		ipaddress = getCurrentIPAddress()
 	}
 
+	// Set the User Check Interval - the number of seconds where the client will check the current username.
+	userCheckInterval := strconv.Atoi(arguments["userCheckInterval"])
+	// Set the Server Send Intrval - the period (this values times the User Check Interval) where the client will send the current user to the server, where that user value has changed or not.
+	serverSendInterval := strconv.Atoi(arguments["serverSendInterval"])
+	
 	if arguments["debug"] == "true" {
 		fmt.Println("Debug mode set - arguments:")
 		for argName, argVal := range arguments {
@@ -193,26 +201,22 @@ func main() {
 	
 	if arguments["service"] == "true" || arguments["daemon"] == "true" {
 		debug("Running as service / daemon.")
-		oldUsername := ""
 		for {
-			if arguments["username"] == "" {
-				username = getCurrentUser()
-			}
-			if oldUsername != username {
-				// Send the username and IP address to the RADIUS server.
-				RADIUSErr := sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
-				if RADIUSErr != nil {
-					debug("Failed to send packet to RADIUS server.")
+			oldUsername := ""
+			for pl := 0; pl < serverSendInterval; pl = pl + 1 {
+				if arguments["username"] == "" {
+					username = getCurrentUser()
 				}
-				oldUsername = username
+				if oldUsername != username {
+					// Send the username and IP address to the RADIUS server.
+					sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
+					oldUsername = username
+				}
+				time.Sleep(userCheckInterval * time.Second)
 			}
-			time.Sleep(30 * time.Second)
 		}
 	} else {
 		// Send the username and IP address to the RADIUS server.
-		RADIUSErr := sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
-		if RADIUSErr != nil {
-			log.Fatalf("Failed to send packet: %v", RADIUSErr)
-		}
+		sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
 	}
 }
