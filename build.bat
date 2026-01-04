@@ -31,10 +31,10 @@ rem The Go RADIUS library.
 go get -u layeh.com/radius 2>&1
 
 rem Clear out previous builds.
-erase ..\RADIUSClient\client.exe 2>&1
-erase ..\*.zip 2>&1
+erase ..\RADIUSClient\*.exe >nul 2>&1
+erase ..\*.zip >nul 2>&1
 if "%BUILDNAME%"=="main" (
-  erase ..\RADIUSClient\config.txt 2>&1
+  erase ..\RADIUSClient\config.txt >nul 2>&1
 )
 
 rem Copy over an example config file, but only if the user hasn't already provided their own.
@@ -44,19 +44,19 @@ if not exist ..\RADIUSClient\config.txt (
 )
 
 rem Copy over the install scripts, including NSSM for Windows Service creation.
-copy install.bat ..\RADIUSClient 2>&1
-copy NSSM\2.24\win32\nssm.exe ..\RADIUSClient\NSSM\2.24\win32 2>&1
-copy NSSM\2.24\win64\nssm.exe ..\RADIUSClient\NSSM\2.24\win64 2>&1
+copy install.bat ..\RADIUSClient >nul 2>&1
+copy NSSM\2.24\win32\nssm.exe ..\RADIUSClient\NSSM\2.24\win32 >nul 2>&1
+copy NSSM\2.24\win64\nssm.exe ..\RADIUSClient\NSSM\2.24\win64 >nul 2>&1
 
 echo Building version: %BUILDVERSION%...
 go build -ldflags "-X main.buildVersion=%BUILDVERSION%" client.go 2>&1
 
 if exist client.exe (
   echo Build succesful - creating Zip archive...
-  move client.exe ..\RADIUSClient 2>&1
+  move client.exe ..\RADIUSClient\client-win64.exe >nul 2>&1
   set ZIPNAME=RADIUSClient-!BUILDNAME!
   if "%BUILDNAME%"=="main" (
     set ZIPNAME=RADIUSClient
   )
-  tar -a -c -f "..\!ZIPNAME!.zip" ..\RADIUSClient 2>&1
+  tar -a -c -f "..\!ZIPNAME!.zip" ..\RADIUSClient >nul 2>&1
 )
