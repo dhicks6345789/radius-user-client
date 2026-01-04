@@ -85,3 +85,11 @@ The shared secret value provided by your RADIUS server.
 
 `domain: example.com`
 The domain name to append to local usenames. So local username "t.user" would be reported to the RADIUS server as "t.user@example.com". Defaults to blank - remove this entry to have usernames reported as-is.
+
+`userCheckInterval: 30`
+The User Check Interval - the number of seconds where the client will check the current username. Generally only informs the RADIUS server if the current username has actually changed since the last check, to keep network traffic down a bit.
+
+`serverSendInterval: 4`
+Set the Server Send Interval - the period (this value times the User Check Interval) where the client will send the current user to the server, where that user value has changed or not. Some RADIUS servers might have a timeout period, where if they haven't heard from a client in a while they'll assume it is no longer active / logged on.
+
+Note that config values can be set via the command line or the config file, the values described in the above two sections are interchangable.
