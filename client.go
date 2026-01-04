@@ -77,11 +77,11 @@ func getCurrentUser() string {
 	queryOut, _ := queryCmd.CombinedOutput()
 	queryResult := strings.TrimSpace(string(queryOut))
 	if strings.HasPrefix(queryResult, "No User exists for") {
-		fmt.Println("To do: figure out what to do if no user reported.")
+		// To do: figure out what to do if no user reported. Could be a user-defineable option of a username to return.
 		username = "default"
 	} else {
 		// To do: more actual parsing goes here to get the current username from a possible list of several.
-		fmt.Printf("%q\n", strings.Fields(queryResult))
+		// fmt.Printf("%q\n", strings.Fields(queryResult))
 		username = strings.TrimLeft(strings.Fields(queryResult)[8], ">")
 	}
 	if arguments["domain"] != "" {
