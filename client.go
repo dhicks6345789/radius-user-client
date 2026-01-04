@@ -115,13 +115,12 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 	rfc2865.FramedIPAddress_Add(packet, net.ParseIP(IPAddress))
 	
 	// Exchange the packet with the server - waits for a response.
-	response, err := radius.Exchange(context.Background(), packet, serverAddr)
-	if err != nil {
-		debug("Failed to send packet to RADIUS server.")
+	response, RADIUSErr := radius.Exchange(context.Background(), packet, serverAddr)
+	if RADIUSErr != nil {
+		debug(fmt.Sprintf("Failed to send packet to RADIUS server: %v", RADIUSErr))
 	}
 	
-	//log.Printf("Received response from server: %v", response.Code)
-	debug("Received response from server: " + response.Code)
+	debug(fmt.Sprintf("Received response from server: %v", response.Code))
 }
 
 // The main body of the program. This application can act as both a simple command-line application for sending a one-off RADIUS accounting packet to a given server, and as a service that can periodically check the current user.
@@ -188,9 +187,15 @@ func main() {
 	}
 
 	// Set the User Check Interval - the number of seconds where the client will check the current username.
-	userCheckInterval := strconv.Atoi(arguments["userCheckInterval"])
+	userCheckInterval, userCheckErr := strconv.Atoi(arguments["userCheckInterval"])
+	if userCheckErr != nil {
+		log.Fatalf("Error converting User Check Interval value to int: %v", userCheckErr)
+	}
 	// Set the Server Send Intrval - the period (this values times the User Check Interval) where the client will send the current user to the server, where that user value has changed or not.
 	serverSendInterval := strconv.Atoi(arguments["serverSendInterval"])
+	if serverSendErr != nil {
+		log.Fatalf("Error converting Server Send Interval value to int: %v", serverSendErr)
+	}
 	
 	if arguments["debug"] == "true" {
 		fmt.Println("Debug mode set - arguments:")
