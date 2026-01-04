@@ -33,10 +33,10 @@ icacls "C:\Program Files\RADIUSUserClient\config.txt" /remove:g * /T /C
 icacls "C:\Program Files\RADIUSUserClient\config.txt" /grant Administrators:(F) /T /C
 
 echo Setting up RADIUSUserClient as a Windows service...
-nssm install RADIUSUserClient "C:\Program Files\RADIUSUserClient\client.exe" > nul 2>&1
-nssm set RADIUSUserClient DisplayName "RADIUS User Client" > nul 2>&1
-nssm set RADIUSUserClient AppNoConsole 1 > nul 2>&1
-nssm set RADIUSUserClient Start SERVICE_AUTO_START > nul 2>&1
+NSSM\2.24\win64\nssm.exe install RADIUSUserClient "C:\Program Files\RADIUSUserClient\client.exe" > nul 2>&1
+NSSM\2.24\win64\nssm.exe set RADIUSUserClient DisplayName "RADIUS User Client" > nul 2>&1
+NSSM\2.24\win64\nssm.exe set RADIUSUserClient AppNoConsole 1 > nul 2>&1
+NSSM\2.24\win64\nssm.exe set RADIUSUserClient Start SERVICE_AUTO_START > nul 2>&1
 net start RADIUSUserClient
 
 echo Done.
