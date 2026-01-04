@@ -192,7 +192,7 @@ func main() {
 		log.Fatalf("Error converting User Check Interval value to int: %v", userCheckErr)
 	}
 	// Set the Server Send Intrval - the period (this values times the User Check Interval) where the client will send the current user to the server, where that user value has changed or not.
-	serverSendInterval := strconv.Atoi(arguments["serverSendInterval"])
+	serverSendInterval, serverSendErr := strconv.Atoi(arguments["serverSendInterval"])
 	if serverSendErr != nil {
 		log.Fatalf("Error converting Server Send Interval value to int: %v", serverSendErr)
 	}
