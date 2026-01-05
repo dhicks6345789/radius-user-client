@@ -83,9 +83,9 @@ func getCurrentUser() string {
 		// To do: more actual parsing goes here to get the current username from a possible list of several.
 		// fmt.Printf("%q\n", strings.Fields(queryResult))
 		for _, queryLine := range strings.Split(queryResult, "\n") {
-			lineSplitWord := strings.Fields(queryLine)[0]
-			if strings.HasPrefix(lineSplitWord, ">") {
-				username = strings.TrimLeft(lineSplitWord, ">")
+			lineSplit := strings.Fields(queryLine)
+			if lineSplit[3] == "Active" {
+				username = strings.TrimLeft(lineSplit[0], ">")
 			}
 		}
 	}
