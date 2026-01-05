@@ -53,7 +53,7 @@ go build -ldflags "-X main.buildVersion=%BUILDVERSION%" client.go 2>&1
 
 if exist client.exe (
   echo Build succesful - creating Zip archive...
-  move client.exe ..\RADIUSClient\client-win64.exe >nul 2>&1
+  move client.exe ..\RADIUSClient\RADIUSUserClient-win64.exe >nul 2>&1
   set ZIPNAME=RADIUSClient-!BUILDNAME!
   if "%BUILDNAME%"=="main" (
     set ZIPNAME=RADIUSClient
