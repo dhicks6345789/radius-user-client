@@ -84,7 +84,7 @@ func getCurrentUser() string {
 		// fmt.Printf("%q\n", strings.Fields(queryResult))
 		for _, queryLine := range strings.Split(queryResult, "\n") {
 			lineSplitWord := strings.Fields(queryLine)[0]
-			if lineSplitWord[0] == ">" {
+			if strings.HasPrefix(lineSplitWord, ">") {
 				username = strings.TrimLeft(lineSplitWord, ">")
 			}
 		}
