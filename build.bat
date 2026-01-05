@@ -58,7 +58,7 @@ if exist client.exe (
   if "%BUILDNAME%"=="main" (
     set ZIPNAME=RADIUSUserClient
   )
-  cd ..\RADIUSUserClient
-  tar -a -c -f "..\!ZIPNAME!.zip" . >nul 2>&1
-  cd ..\radius-user-client
+  cd ..
+  tar -a -c -f "!ZIPNAME!.zip" RADIUSUserClient >nul 2>&1
+  cd radius-user-client
 )
