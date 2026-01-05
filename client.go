@@ -83,9 +83,12 @@ func getCurrentUser() string {
 		// To do: more actual parsing goes here to get the current username from a possible list of several.
 		// fmt.Printf("%q\n", strings.Fields(queryResult))
 		for _, queryLine := range strings.Split(queryResult, "\n") {
-			fmt.Printf("%q\n", strings.Split(queryLine, " ")[0])
+			lineSplitWord = strings.Split(queryLine, " ")[0]
+			if lineSplitWord[0] == ">" {
+				username = strings.TrimLeft(lineSplitWord, ">")
+			}
 		}
-		username = strings.TrimLeft(strings.Fields(queryResult)[8], ">")
+		//username = strings.TrimLeft(strings.Fields(queryResult)[8], ">")
 	}
 	if arguments["domain"] != "" {
 		username  = username + "@" + arguments["domain"]
