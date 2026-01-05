@@ -16,8 +16,9 @@ shift
 goto paramLoop
 :paramContinue
 
-rem Stop any existing running service.
+rem Stop / remove any existing running service.
 net stop RADIUSUserClient >nul 2>&1
+nssm remove RADIUSUserClient
 
 rem Make sure the install folder exists.
 mkdir "C:\Program Files\RADIUSUserClient" >nul 2>&1
