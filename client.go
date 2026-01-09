@@ -89,12 +89,14 @@ func getCurrentUser() string {
 			// fmt.Printf("%q\n", strings.Fields(queryResult))
 			for _, queryLine := range strings.Split(queryResult, "\n") {
 				lineSplit := strings.Fields(queryLine)
-				if lineSplit[3] == "Active" {
-					username = strings.TrimLeft(lineSplit[0], ">")
+				if len(lineSplit) >= 3 {
+					if lineSplit[3] == "Active" {
+						username = strings.TrimLeft(lineSplit[0], ">")
+						getUserMethod = 1
+					}
 				}
 			}
 		}
-		getUserMethod = 1
 	}
 	if arguments["domain"] != "" {
 		username  = username + "@" + arguments["domain"]
@@ -111,7 +113,7 @@ func getCurrentIPAddress() string {
 		ipconfigOut, _ := ipconfigCmd.CombinedOutput()
 		ipconfigResult := string(ipconfigOut)
 		// To do: more actual parsing goes here.
-		//fmt.Printf("%q\n", strings.Fields(ipconfigResult))
+		fmt.Printf("%q\n", strings.Fields(ipconfigResult))
 		IPAddress = strings.TrimSpace(strings.Split(ipconfigResult, ":")[1])
 		getIPMethod = 1
 	}
