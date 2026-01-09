@@ -27,6 +27,10 @@ import (
 // The current release version - value provided via the command line at compile time.
 var buildVersion string
 
+// Remember how we get the current user / IP address.
+var getUserMethod = 0
+var getIPMethod = 0
+
 // A map to store any arguments passed on the command line.
 var arguments = map[string]string{}
 
@@ -71,23 +75,26 @@ func readConfigFile(theConfigPath string) map[string]string {
 // Get the current username from the system. Method used varies as to the system this client is running on.
 func getCurrentUser() string {
 	username := ""
-	
-	// Try "query user".
-	queryCmd := exec.Command("cmd", "/C", "query user")
-	queryOut, _ := queryCmd.CombinedOutput()
-	queryResult := strings.TrimSpace(string(queryOut))
-	if strings.HasPrefix(queryResult, "No User exists for") {
-		// To do: figure out what to do if no user reported. Could be a user-defineable option of a username to return.
-		username = "default"
-	} else {
-		// To do: more actual parsing goes here to get the current username from a possible list of several.
-		// fmt.Printf("%q\n", strings.Fields(queryResult))
-		for _, queryLine := range strings.Split(queryResult, "\n") {
-			lineSplit := strings.Fields(queryLine)
-			if lineSplit[3] == "Active" {
-				username = strings.TrimLeft(lineSplit[0], ">")
+
+	if getUserMethod == 0 || getUserMethod == 1 {
+		// Try "query user".
+		queryCmd := exec.Command("cmd", "/C", "query user")
+		queryOut, _ := queryCmd.CombinedOutput()
+		queryResult := strings.TrimSpace(string(queryOut))
+		if strings.HasPrefix(queryResult, "No User exists for") {
+			// To do: figure out what to do if no user reported. Could be a user-defineable option of a username to return.
+			username = "default"
+		} else {
+			// To do: more actual parsing goes here to get the current username from a possible list of several.
+			// fmt.Printf("%q\n", strings.Fields(queryResult))
+			for _, queryLine := range strings.Split(queryResult, "\n") {
+				lineSplit := strings.Fields(queryLine)
+				if lineSplit[3] == "Active" {
+					username = strings.TrimLeft(lineSplit[0], ">")
+				}
 			}
 		}
+		getUserMethod = 1
 	}
 	if arguments["domain"] != "" {
 		username  = username + "@" + arguments["domain"]
@@ -98,13 +105,16 @@ func getCurrentUser() string {
 func getCurrentIPAddress() string {
 	IPAddress := ""
 
-	// Try "ipconfig".
-	ipconfigCmd := exec.Command("cmd", "/C", "ipconfig | findstr /c:IPv4")
-	ipconfigOut, _ := ipconfigCmd.CombinedOutput()
-	ipconfigResult := string(ipconfigOut)
-	// To do: more actual parsing goes here.
-	//fmt.Printf("%q\n", strings.Fields(ipconfigResult))
-	IPAddress = strings.TrimSpace(strings.Split(ipconfigResult, ":")[1])
+	if getIPMethod == 0 || getIPMethod == 1 {
+		// Try "ipconfig".
+		ipconfigCmd := exec.Command("cmd", "/C", "ipconfig | findstr /c:IPv4")
+		ipconfigOut, _ := ipconfigCmd.CombinedOutput()
+		ipconfigResult := string(ipconfigOut)
+		// To do: more actual parsing goes here.
+		//fmt.Printf("%q\n", strings.Fields(ipconfigResult))
+		IPAddress = strings.TrimSpace(strings.Split(ipconfigResult, ":")[1])
+		getIPMethod = 1
+	}
 	return IPAddress
 }
 
