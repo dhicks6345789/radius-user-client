@@ -50,11 +50,17 @@ copy NSSM\2.24\win64\nssm.exe ..\RADIUSUserClient\NSSM\2.24\win64 >nul 2>&1
 
 echo Building version: %BUILDVERSION%...
 go build -ldflags "-X main.buildVersion=%BUILDVERSION%" client.go 2>&1
-set GOOS=linux&& set GOARCH=amd64&& go build -ldflags "-X main.buildVersion=%BUILDVERSION%" client.go 2>&1
 
 if exist client.exe (
   echo Build succesful - creating Zip archive...
-  move client.exe ..\RADIUSUserClient\RADIUSUserClient-win64.exe >nul 2>&1
+
+  rem Rename the Windows executable.
+  move client.exe ..\RADIUSUserClient\RADIUSUserClient-win-amd64.exe >nul 2>&1
+
+  Rem Build and rename the Linux client.
+  set GOOS=linux&& set GOARCH=amd64&& go build -ldflags "-X main.buildVersion=%BUILDVERSION%" client.go 2>&1
+  move client ..\RADIUSUserClient\RADIUSUserClient-lin-amd64.exe >nul 2>&1
+
   set ZIPNAME=RADIUSUserClient-!BUILDNAME!
   if "%BUILDNAME%"=="main" (
     set ZIPNAME=RADIUSUserClient
