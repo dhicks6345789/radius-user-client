@@ -59,7 +59,7 @@ if exist client.exe (
 
   Rem Build and rename the Linux client.
   set GOOS=linux&& set GOARCH=amd64&& go build -ldflags "-X main.buildVersion=%BUILDVERSION%" client.go 2>&1
-  move client ..\RADIUSUserClient\RADIUSUserClient-lin-amd64.exe >nul 2>&1
+  move client ..\RADIUSUserClient\RADIUSUserClient-lin-amd64 >nul 2>&1
 
   set ZIPNAME=RADIUSUserClient-!BUILDNAME!
   if "%BUILDNAME%"=="main" (
