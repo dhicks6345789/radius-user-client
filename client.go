@@ -89,7 +89,7 @@ func getCurrentUser() string {
 			// fmt.Printf("%q\n", strings.Fields(queryResult))
 			for _, queryLine := range strings.Split(queryResult, "\n") {
 				lineSplit := strings.Fields(queryLine)
-				if len(lineSplit) >= 4 {
+				if len(lineSplit) > 3 {
 					if lineSplit[3] == "Active" {
 						username = strings.TrimLeft(lineSplit[0], ">")
 						getUserMethod = 1
@@ -115,7 +115,7 @@ func getCurrentIPAddress() string {
 		// To do: more actual parsing goes here.
 		// fmt.Printf("%q\n", strings.Fields(ipconfigResult))
 		lineSplit := strings.Split(ipconfigResult, ":")
-		if len(lineSplit) >= 2 {
+		if len(lineSplit) > 1 {
 			IPAddress = strings.TrimSpace(lineSplit[1])
 			getIPMethod = 1
 		}
