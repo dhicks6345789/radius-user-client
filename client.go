@@ -113,9 +113,12 @@ func getCurrentIPAddress() string {
 		ipconfigOut, _ := ipconfigCmd.CombinedOutput()
 		ipconfigResult := string(ipconfigOut)
 		// To do: more actual parsing goes here.
-		fmt.Printf("%q\n", strings.Fields(ipconfigResult))
-		IPAddress = strings.TrimSpace(strings.Split(ipconfigResult, ":")[1])
-		getIPMethod = 1
+		// fmt.Printf("%q\n", strings.Fields(ipconfigResult))
+		lineSplit := strings.Split(ipconfigResult, ":")
+		if len(lineSplit) >= 1 {
+			IPAddress = strings.TrimSpace(lineSplit[1])
+			getIPMethod = 1
+		}
 	}
 	return IPAddress
 }
