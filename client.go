@@ -107,18 +107,24 @@ func getCurrentUser() string {
 func getCurrentIPAddress() string {
 	IPAddress := ""
 
+	// Try "ipconfig", should work on Windows.
 	if getIPMethod == 0 || getIPMethod == 1 {
-		// Try "ipconfig".
 		ipconfigCmd := exec.Command("cmd", "/C", "ipconfig | findstr /c:IPv4")
 		ipconfigOut, _ := ipconfigCmd.CombinedOutput()
 		ipconfigResult := string(ipconfigOut)
-		// To do: more actual parsing goes here.
-		// fmt.Printf("%q\n", strings.Fields(ipconfigResult))
 		lineSplit := strings.Split(ipconfigResult, ":")
 		if len(lineSplit) > 1 {
 			IPAddress = strings.TrimSpace(lineSplit[1])
 			getIPMethod = 1
 		}
+	}
+	// Try "hostname", should work on Linux.
+	if getIPMethod == 0 || getIPMethod == 2 {
+		shellCmd := exec.Command("hostname", "--all-ip-addresses")
+		shellOut, _ := shellCmd.CombinedOutput()
+		shellResult := string(shellOut)
+		IPAddress = strings.Fields(shellResult)[0]
+		getIPMethod = 2
 	}
 	return IPAddress
 }
