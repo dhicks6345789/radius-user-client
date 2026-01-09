@@ -45,6 +45,7 @@ if not exist ..\RADIUSUserClient\config.txt (
 
 rem Copy over the install scripts, including NSSM for Windows Service creation.
 copy install.bat ..\RADIUSUserClient >nul 2>&1
+copy install.sh ..\RADIUSUserClient >nul 2>&1
 copy NSSM\2.24\win32\nssm.exe ..\RADIUSUserClient\NSSM\2.24\win32 >nul 2>&1
 copy NSSM\2.24\win64\nssm.exe ..\RADIUSUserClient\NSSM\2.24\win64 >nul 2>&1
 
