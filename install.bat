@@ -24,7 +24,7 @@ rem Make sure the install folder exists.
 mkdir "C:\Program Files\RADIUSUserClient" >nul 2>&1
 
 rem Copy the executable and config file.
-copy RADIUSUserClient-win64.exe "C:\Program Files\RADIUSUserClient\RADIUSUserClient.exe" >nul 2>&1
+copy RADIUSUserClient-win-amd64.exe "C:\Program Files\RADIUSUserClient\RADIUSUserClient.exe" >nul 2>&1
 copy NSSM\2.24\win64\nssm.exe "C:\Program Files\RADIUSUserClient" >nul 2>&1
 copy config.txt "C:\Program Files\RADIUSUserClient" >nul 2>&1
 
