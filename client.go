@@ -31,6 +31,11 @@ var buildVersion string
 var getUserMethod = 0
 var getIPMethod = 0
 
+// If running in service mode, this application can act as an intermidiate service between UniFi and your (Smoothwall, etc) RADIUS accounting server.
+// If the unifiServer and unifiKey arguments are set, either at the command line or in a config file, the application will poll the UniFi server
+// for new user logons and inform the RADIUS server.
+var pollUnifi = false
+
 // A map to store any arguments passed on the command line.
 var arguments = map[string]string{}
 
@@ -169,6 +174,8 @@ func main() {
 	arguments["ipaddress"] = ""
 	arguments["domain"] = ""
 	arguments["server"] = ""
+	arguments["unifiServer"] = ""
+	arguments["unifiKey"] = ""
 	arguments["userCheckInterval"] = "30"
 	arguments["serverSendInterval"] = "4"
 	setArgumentIfPathExists("config", []string {"config.txt", "/etc/radiususerclient/config.txt", "C:\\Program Files\\RadiusUserClient\\config.txt"})
@@ -239,18 +246,26 @@ func main() {
 		}
 	}
 	
+	if arguments["unifiServer"] != "" && arguments["unifiKey"] != "" {
+		pollUnifi = true
+	}
+	
 	if arguments["service"] == "true" || arguments["daemon"] == "true" {
 		debug("Running as service / daemon.")
 		for {
 			oldUsername := ""
 			for pl := 0; pl < serverSendInterval; pl = pl + 1 {
-				if arguments["username"] == "" {
-					username = getCurrentUser()
-				}
-				if oldUsername != username {
-					// Send the username and IP address to the RADIUS server.
-					sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
-					oldUsername = username
+				if pollUniFi {
+					debug("Polling UniFi server...")
+				} else {
+					if arguments["username"] == "" {
+						username = getCurrentUser()
+					}
+					if oldUsername != username {
+						// Send the username and IP address to the RADIUS server.
+						sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
+						oldUsername = username
+					}
 				}
 				time.Sleep(time.Duration(userCheckInterval) * time.Second)
 			}
