@@ -104,6 +104,7 @@ func getCurrentUser() string {
 		shellResult := strings.TrimSpace(string(shellOut))
 		username = shellResult
 		getUserMethod = 2
+		fmt.Println("Username: ", username)
 	}
 	if arguments["domain"] != "" {
 		username  = username + "@" + arguments["domain"]
