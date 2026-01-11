@@ -28,6 +28,14 @@ Written in Go, the executable should be self-contained, with no external require
 ## Installation
 To install on a single device, unpack the Zip file and run the install script for your platform (install.bat for Windows, install.sh for other platforms). On a managed network, you are probably going to want to unpack that Zip file into a central repository of some sort, modify the given configuration file to match your setup, then distribute from there.
 
+Google Drive (or other, similar storage services) can act as a handy repository if you don't have other options. Simply upload the Zip archive with your customised config.txt file in to Google Drive, and make that Google Drive file readable to anyone with the link. On a Windows machine, you should then be able to run something like:
+
+`curl --silent -L "https://drive.usercontent.google.com/download?id=<FILEIDGOESHERE>&confirm=xxx" -o RADIUSUserClient.zip && tar -xf RADIUSUserClient.zip && cd RADIUSUserClient && install.sh && cd .. && erase RADIUSUserClient.zip && rmdir /s /q RADIUSUserClient`
+
+On a Linux (or MacOS?) machine, you should be able to run something like:
+
+`apt install unzip; apt install dos2unix; curl --silent -L "https://drive.usercontent.google.com/download?id=<FILEIDGOESHERE>&confirm=xxx" -o RADIUSUserClient.zip; unzip RADIUSUserClient.zip; cd RADIUSUserClient; dos2unix install.sh; bash install.sh; cd ..; rm RADIUSUserClient.zip; rm -rf RADIUSUserClient`
+
 ### Configuration - Client Devices
 On your Windows / MacOS / etc devices, you will need to have a config file holding appropriate values for your network. You'll need the IP address of the RADIUS server, the shared secret provided by your RADIUS server, and the domain name you wish to append to the usernames.
 
