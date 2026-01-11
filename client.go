@@ -99,7 +99,7 @@ func getCurrentUser() string {
 		}
 	}
 	if getUserMethod == 0 || getUserMethod == 2 {
-		shellCmd := exec.Command("whoamii")
+		shellCmd := exec.Command("whoami")
 		shellOut, _ := shellCmd.CombinedOutput()
 		shellResult := strings.TrimSpace(string(shellOut))
 		username = shellResult
