@@ -122,6 +122,7 @@ func getCurrentIPAddress() string {
 	if getIPMethod == 0 || getIPMethod == 2 {
 		shellCmd := exec.Command("hostname", "--all-ip-addresses")
 		shellOut, _ := shellCmd.CombinedOutput()
+		fmt.Println("shellOut: ", shellOut)
 		shellResult := string(shellOut)
 		IPAddress = strings.Fields(shellResult)[0]
 		getIPMethod = 2
