@@ -255,7 +255,7 @@ func main() {
 		for {
 			oldUsername := ""
 			for pl := 0; pl < serverSendInterval; pl = pl + 1 {
-				if pollUniFi {
+				if pollUnifi {
 					debug("Polling UniFi server...")
 				} else {
 					if arguments["username"] == "" {
