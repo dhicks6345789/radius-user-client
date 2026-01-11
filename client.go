@@ -98,6 +98,13 @@ func getCurrentUser() string {
 			}
 		}
 	}
+	if getUserMethod == 0 || getUserMethod == 2 {
+		shellCmd := exec.Command("whoamii")
+		shellOut, _ := queryCmd.CombinedOutput()
+		shellResult := strings.TrimSpace(string(queryOut))
+		username = shellResult
+		getUserMethod = 2
+	}
 	if arguments["domain"] != "" {
 		username  = username + "@" + arguments["domain"]
 	}
@@ -124,7 +131,7 @@ func getCurrentIPAddress() string {
 		shellOut, _ := shellCmd.CombinedOutput()
 		shellResult := string(shellOut)
 		fmt.Println("shellOut: ", shellResult)
-		IPAddress = strings.Fields(shellResult)[0]
+		IPAddress = strings.TrimSpace(strings.Fields(shellResult)[0])
 		getIPMethod = 2
 		fmt.Println("IPAddress: ", IPAddress)
 	}
@@ -163,6 +170,7 @@ func main() {
 	arguments["username"] = ""
 	arguments["ipaddress"] = ""
 	arguments["domain"] = ""
+	arguments["server"] = ""
 	arguments["userCheckInterval"] = "30"
 	arguments["serverSendInterval"] = "4"
 	setArgumentIfPathExists("config", []string {"config.txt", "/etc/radiususerclient/config.txt", "C:\\Program Files\\RadiusUserClient\\config.txt"})
