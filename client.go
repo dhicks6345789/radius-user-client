@@ -104,7 +104,6 @@ func getCurrentUser() string {
 		shellResult := strings.TrimSpace(string(shellOut))
 		username = shellResult
 		getUserMethod = 2
-		fmt.Println("Username: ", username)
 	}
 	if arguments["domain"] != "" {
 		username  = username + "@" + arguments["domain"]
@@ -131,10 +130,8 @@ func getCurrentIPAddress() string {
 		shellCmd := exec.Command("hostname", "--all-ip-addresses")
 		shellOut, _ := shellCmd.CombinedOutput()
 		shellResult := string(shellOut)
-		fmt.Println("shellOut: ", shellResult)
 		IPAddress = strings.TrimSpace(strings.Fields(shellResult)[0])
 		getIPMethod = 2
-		fmt.Println("IPAddress: ", IPAddress)
 	}
 	return IPAddress
 }
