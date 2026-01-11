@@ -41,4 +41,11 @@ echo Setting up RADIUSUserClient as a Windows service...
 "C:\Program Files\RADIUSUserClient\nssm.exe" set RADIUSUserClient Start SERVICE_AUTO_START >nul 2>&1
 net start RADIUSUserClient
 
+rem Handy optional extra: if an HTTPS certificate (a .crt file) is found, install it as a Windows Trusted Root Certification Authorities certificate.
+rem This allows you to distribute the Smoothwall (or other system's) trusted root certificate in one go along with the RADIUS client.
+for %%f in (*.crt) do (
+  echo Installing "%%f" in Trusted Root Certification Authorities...
+  rem certutil -addstore -f "Root" "%%f"
+)
+
 echo Done.
