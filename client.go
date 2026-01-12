@@ -135,8 +135,25 @@ func getCurrentIPAddress() string {
 		shellCmd := exec.Command("hostname", "--all-ip-addresses")
 		shellOut, _ := shellCmd.CombinedOutput()
 		shellResult := string(shellOut)
-		IPAddress = strings.TrimSpace(strings.Fields(shellResult)[0])
-		getIPMethod = 2
+		if shellResult != "hostname:." {
+			IPAddress = strings.TrimSpace(strings.Fields(shellResult)[0])
+			getIPMethod = 2
+		}
+	}
+	// Try "ifconfig", should work onMacOS.
+	if getIPMethod == 0 || getIPMethod == 3 {
+		shellCmd := exec.Command("bash", "-c", "ifconfig | grep inet | grep -v inet6")
+		shellOut, _ := shellCmd.CombinedOutput()
+		shellResult := string(shellOut)
+		for _, shellLine := range strings.Split(shellResult, "\n") {
+			lineSplit := strings.Fields(shellLine)
+			if len(lineSplit) > 1 {
+				if lineSplit[1] != "127.0.0.1" {
+					IPAddress = lineSplit[1]
+					getIPMethod = 3
+				}
+			}
+		}
 	}
 	return IPAddress
 }
