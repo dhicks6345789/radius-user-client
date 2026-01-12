@@ -7,10 +7,12 @@ BINARY=linux-amd64
 [[ $ARCH == aarch64 ]] && BINARY=linux-arm64
 
 if [ "$ARCH" = "arm64" ]; then
-  echo "On MacOS!"
+  echo "Doing MacOS install..."
   cp RADIUSUserClient-mac-arm64 /usr/local/bin/RADIUSUserClient
 else
-  # Copy the executable to the system.
+  echo "Doing Linux install..."
   # cp RADIUSUserClient-lin-amd64 /usr/local/bin/RADIUSUserClient
 fi
 chmod u+x /usr/local/bin/RADIUSUserClient
+
+echo Done.
