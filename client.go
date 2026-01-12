@@ -197,7 +197,7 @@ func main() {
 	arguments["unifiKey"] = ""
 	arguments["userCheckInterval"] = "30"
 	arguments["serverSendInterval"] = "4"
-	setArgumentIfPathExists("config", []string {"config.txt", "/etc/radiususerclient/config.txt", "C:\\Program Files\\RadiusUserClient\\config.txt"})
+	setArgumentIfPathExists("config", []string {"config.txt", "/etc/radiususerclient/config.txt", "/Library/Application Support/RADIUSUserClient/config.txt", "C:\\Program Files\\RadiusUserClient\\config.txt"})
 	
 	// Parse any command line arguments.
 	currentArgKey := ""
