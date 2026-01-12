@@ -81,6 +81,7 @@ func readConfigFile(theConfigPath string) map[string]string {
 func getCurrentUser() string {
 	username := ""
 
+	// Try "query user" - should work on Windows 11 Enterprise / Edu, but not the Home version.
 	if getUserMethod == 0 || getUserMethod == 1 {
 		// Try "query user".
 		queryCmd := exec.Command("cmd", "/C", "query user")
@@ -103,6 +104,7 @@ func getCurrentUser() string {
 			}
 		}
 	}
+	// Try "whoami" - should work on Linux and MacOS.
 	if getUserMethod == 0 || getUserMethod == 2 {
 		shellCmd := exec.Command("whoami")
 		shellOut, _ := shellCmd.CombinedOutput()
