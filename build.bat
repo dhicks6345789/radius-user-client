@@ -58,7 +58,11 @@ if exist client.exe (
   rem Rename the Windows executable.
   move client.exe ..\RADIUSUserClient\RADIUSUserClient-win-amd64.exe >nul 2>&1
 
-  Rem Build and rename the Linux client.
+  rem Build and rename the MacOS client.
+  set GOOS=darwin&& set GOARCH=arm64&& go build -ldflags "-X main.buildVersion=%BUILDVERSION%" client.go 2>&1
+  move client ..\RADIUSUserClient\RADIUSUserClient-mac-arm64 >nul 2>&1
+
+  rem Build and rename the Linux client.
   set GOOS=linux&& set GOARCH=amd64&& go build -ldflags "-X main.buildVersion=%BUILDVERSION%" client.go 2>&1
   move client ..\RADIUSUserClient\RADIUSUserClient-lin-amd64 >nul 2>&1
 
