@@ -9,6 +9,8 @@ BINARY=linux-amd64
 if [ "$ARCH" = "arm64" ]; then
   echo "Doing MacOS install..."
   cp RADIUSUserClient-mac-arm64 /usr/local/bin/RADIUSUserClient
+  mkdir "/Library/Application Support/RADIUSUserClient"
+  cp config.txt "/Library/Application Support/RADIUSUserClient"
 else
   echo "Doing Linux install..."
   # cp RADIUSUserClient-lin-amd64 /usr/local/bin/RADIUSUserClient
