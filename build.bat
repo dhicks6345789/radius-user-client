@@ -45,9 +45,11 @@ if not exist ..\RADIUSUserClient\config.txt (
 
 rem Copy over the install scripts, including NSSM for Windows Service creation.
 copy install.bat ..\RADIUSUserClient >nul 2>&1
-copy install.sh ..\RADIUSUserClient >nul 2>&1
 copy NSSM\2.24\win32\nssm.exe ..\RADIUSUserClient\NSSM\2.24\win32 >nul 2>&1
 copy NSSM\2.24\win64\nssm.exe ..\RADIUSUserClient\NSSM\2.24\win64 >nul 2>&1
+rem Copy the Linux / MacOS install script (written in Bash) - remember to fix line-endings.
+copy install.sh ..\RADIUSUserClient >nul 2>&1
+powershell.exe -noninteractive -NoProfile -ExecutionPolicy Bypass -Command "& {[IO.File]::WriteAllText('file_lfonly.txt', ([IO.File]::ReadAllText('..\RADIUSUserClient\install.sh') -replace \"`r`n\", \"`n\"))};"
 
 echo Building version: %BUILDVERSION%...
 go build -ldflags "-X main.buildVersion=%BUILDVERSION%" client.go 2>&1
