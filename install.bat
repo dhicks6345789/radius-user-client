@@ -45,7 +45,7 @@ rem Handy optional extra: if an HTTPS certificate (a .crt file) is found, instal
 rem This allows you to distribute the Smoothwall (or other system's) trusted root certificate in one go along with the RADIUS client.
 for %%f in (*.crt) do (
   echo Installing "%%f" in Trusted Root Certification Authorities...
-  rem certutil -addstore -f "Root" "%%f"
+  certutil -addstore -f "Root" "%%f"
 )
 
 echo Done.
