@@ -15,6 +15,6 @@ else
   echo "Doing Linux install..."
   cp RADIUSUserClient-lin-amd64 /usr/local/bin/RADIUSUserClient
 fi
-chmod u+x /usr/local/bin/RADIUSUserClient
+chmod a+x /usr/local/bin/RADIUSUserClient
 
 echo Done.
