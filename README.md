@@ -32,9 +32,27 @@ Google Drive (or other, similar storage services) can act as a handy repository 
 
 `curl --silent -L "https://drive.usercontent.google.com/download?id=<FILEIDGOESHERE>&confirm=xxx" -o RADIUSUserClient.zip && tar -xf RADIUSUserClient.zip && cd RADIUSUserClient && install.sh && cd .. && erase RADIUSUserClient.zip && rmdir /s /q RADIUSUserClient`
 
-On a Linux (or MacOS?) machine, you should be able to run something like:
+On a Linux machine, you should be able to run something like:
 
 `apt install unzip; apt install dos2unix; curl --silent -L "https://drive.usercontent.google.com/download?id=<FILEIDGOESHERE>&confirm=xxx" -o RADIUSUserClient.zip; unzip RADIUSUserClient.zip; cd RADIUSUserClient; dos2unix install.sh; bash install.sh; cd ..; rm RADIUSUserClient.zip; rm -rf RADIUSUserClient`
+
+On a MacOS machine, you should be able to run something like:
+
+```
+cd /tmp
+curl --silent -L "https://drive.usercontent.google.com/download?id=<FILEIDGOESHERE>&confirm=xxx" -o RADIUSUserClient.zip
+unzip RADIUSUserClient.zip
+cd RADIUSUserClient
+bash install.sh
+cd ..
+rm RADIUSUserClient.zip
+rm -rf RADIUSUserClient
+rm "/Library/Application Support/RADIUSUserClient/config.txt"
+```
+
+MacOS and Linux installation doesn't currently include installation as a service. On MacOS, if you are using an MDM system (e.g. Moysle), you should be able to set a run-on-login script to run when a user logs in, something like:
+
+`/usr/local/bin/RADIUSUserClient --secret <SECRETGOESHERE> --server <RADIUSSERVERIPADDRESS> --domain <DOMAINAMEGOESHERE>`
 
 ### Configuration - Client Devices
 On your Windows / MacOS / etc devices, you will need to have a config file holding appropriate values for your network. You'll need the IP address of the RADIUS server, the shared secret provided by your RADIUS server, and the domain name you wish to append to the usernames.
