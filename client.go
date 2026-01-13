@@ -101,7 +101,7 @@ func getCurrentUser() string {
 			for _, queryLine := range strings.Split(queryResult, "\n") {
 				lineSplit := strings.Fields(queryLine)
 				if len(lineSplit) > 3 {
-					if lineSplit[3] == "Active" {
+					if strings.TrimSpace(lineSplit[3]) == "Active" {
 						username = strings.TrimLeft(lineSplit[0], ">")
 						getUserMethod = 1
 					}
