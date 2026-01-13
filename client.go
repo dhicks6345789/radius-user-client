@@ -81,7 +81,7 @@ func readConfigFile(theConfigPath string) map[string]string {
 func getCurrentUser() string {
 	username := ""
 
-	tmpCmd := exec.Command("cmd", "/C", "query user > \"C:\Program File\RADIUSUserClient\log.txt\"")
+	tmpCmd := exec.Command("cmd", "/C", "query user > \"C:\\Program File\\RADIUSUserClient\\log.txt\"")
 
 	// Try "query user" - should work on Windows 11 Enterprise / Edu, but not the Home version.
 	if getUserMethod == 0 || getUserMethod == 1 {
