@@ -112,7 +112,7 @@ func getCurrentUser() string {
 	// Try getting the current console user - should work on MacOS.
 	// stat -f "%Su" /dev/console
 	if getUserMethod == 0 || getUserMethod == 2 {
-		shellCmd := exec.Command("stat", "-f", "\"%Su\"", "/dev/console")
+		shellCmd := exec.Command("stat", "-f", "%Su", "/dev/console")
 		shellOut, _ := shellCmd.CombinedOutput()
 		shellResult := strings.TrimSpace(string(shellOut))
 		if !strings.HasPrefix(shellResult, "stat: cannot read file system information") {
