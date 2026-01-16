@@ -109,14 +109,25 @@ func getCurrentUser() string {
 			}
 		}
 	}
+	// Try getting the current console user - should work on MacOS.
+	// stat -f "%Su" /dev/console
+	if getUserMethod == 0 || getUserMethod == 2 {
+		shellCmd := exec.Command("stat", "-f", "\"%Su\"", "/dev/console")
+		shellOut, _ := shellCmd.CombinedOutput()
+		shellResult := strings.TrimSpace(string(shellOut))
+		if !strings.hasPrefix(shellResult, "stat: cannot read file system information") {
+			username = shellResult
+			getUserMethod = 2
+		}
+	}
 	// Try "whoami" - should work on Linux and MacOS.
 	// Note: And Windows.
-	if getUserMethod == 0 || getUserMethod == 2 {
+	if getUserMethod == 0 || getUserMethod == 3 {
 		shellCmd := exec.Command("whoami")
 		shellOut, _ := shellCmd.CombinedOutput()
 		shellResult := strings.TrimSpace(string(shellOut))
 		username = shellResult
-		getUserMethod = 2
+		getUserMethod = 3
 	}
 	if arguments["domain"] != "" {
 		username  = username + "@" + arguments["domain"]
