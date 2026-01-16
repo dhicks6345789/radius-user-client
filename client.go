@@ -295,6 +295,7 @@ func main() {
 		debug("Running as service / daemon.")
 		for {
 			oldUsername := ""
+			oldIpaddress := ""
 			for pl := 0; pl < serverSendInterval; pl = pl + 1 {
 				if pollUnifi {
 					debug("Polling UniFi server...")
@@ -302,10 +303,11 @@ func main() {
 					if arguments["username"] == "" {
 						username = getCurrentUser()
 					}
-					if oldUsername != username {
+					if oldUsername != username || oldIpAddress != ipaddress {
 						// Send the username and IP address to the RADIUS server.
 						sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
 						oldUsername = username
+						oldIpaddress = ipaddress
 					}
 				}
 				time.Sleep(time.Duration(userCheckInterval) * time.Second)
