@@ -303,7 +303,7 @@ func main() {
 					if arguments["username"] == "" {
 						username = getCurrentUser()
 					}
-					if oldUsername != username || oldIpAddress != ipaddress {
+					if oldUsername != username || oldIpaddress != ipaddress {
 						// Send the username and IP address to the RADIUS server.
 						sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
 						oldUsername = username
