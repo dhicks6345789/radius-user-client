@@ -115,7 +115,7 @@ func getCurrentUser() string {
 		shellCmd := exec.Command("stat", "-f", "\"%Su\"", "/dev/console")
 		shellOut, _ := shellCmd.CombinedOutput()
 		shellResult := strings.TrimSpace(string(shellOut))
-		if !strings.hasPrefix(shellResult, "stat: cannot read file system information") {
+		if !strings.HasPrefix(shellResult, "stat: cannot read file system information") {
 			username = shellResult
 			getUserMethod = 2
 		}
