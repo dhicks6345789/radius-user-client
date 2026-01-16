@@ -81,13 +81,13 @@ func readConfigFile(theConfigPath string) map[string]string {
 func getCurrentUser() string {
 	username := ""
 
+	// See if we're on Windows.
+	if _, existsErr := os.Stat("C:\\Program Files"); !os.IsNotExist(existsErr) {
+		getUserMethod = 1
+	}
+
 	// Try "query user" - should work on Windows 11 Enterprise / Edu, but not the Home version.
 	if getUserMethod == 0 || getUserMethod == 1 {
-		// See if we're on Windows.
-		if _, existsErr := os.Stat("C:\\Program Files"); !os.IsNotExist(existsErr) {
-			getUserMethod = 1
-		}
-		
 		// Try "query user".
 		queryCmd := exec.Command("cmd", "/C", "query user")
 		queryOut, _ := queryCmd.CombinedOutput()
@@ -137,6 +137,11 @@ func getCurrentUser() string {
 
 func getCurrentIPAddress() string {
 	IPAddress := ""
+
+	// See if we're on Windows.
+	if _, existsErr := os.Stat("C:\\Program Files"); !os.IsNotExist(existsErr) {
+		getIPMethod = 1
+	}
 
 	// Try "ipconfig", should work on Windows.
 	if getIPMethod == 0 || getIPMethod == 1 {
