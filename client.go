@@ -274,12 +274,12 @@ func main() {
 	}
 
 	// Set the User Check Interval - the number of seconds where the client will check the current username.
-	userCheckInterval, userCheckErr := strconv.Atoi(arguments["userCheckInterval"])
+	userCheckInterval, userCheckErr := strconv.Atoi(arguments["usercheckinterval"])
 	if userCheckErr != nil {
 		log.Fatalf("Error converting User Check Interval value to int: %v", userCheckErr)
 	}
 	// Set the Server Send Intrval - the period (this values times the User Check Interval) where the client will send the current user to the server, where that user value has changed or not.
-	serverSendInterval, serverSendErr := strconv.Atoi(arguments["serverSendInterval"])
+	serverSendInterval, serverSendErr := strconv.Atoi(arguments["serversendinterval"])
 	if serverSendErr != nil {
 		log.Fatalf("Error converting Server Send Interval value to int: %v", serverSendErr)
 	}
@@ -319,6 +319,6 @@ func main() {
 		}
 	} else {
 		// Send the username and IP address to the RADIUS server.
-		sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
+		sendAccountingPacket(arguments["server"] + ":" + arguments["accountingport"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
 	}
 }
