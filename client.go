@@ -94,7 +94,7 @@ func getCurrentUser() string {
 		queryResult := strings.TrimSpace(string(queryOut))
 		if strings.HasPrefix(queryResult, "No User exists for") {
 			// To do: figure out what to do if no user reported. Could be a user-defineable option of a username to return.
-			username = "default"
+			username = ""
 		} else {
 			// To do: more actual parsing goes here to get the current username from a possible list of several.
 			// fmt.Printf("%q\n", strings.Fields(queryResult))
@@ -184,6 +184,10 @@ func getCurrentIPAddress() string {
 
 // Sends a RADIUS accounting request to the specified server.
 func sendAccountingPacket(serverAddr string, secret string, username string, IPAddress string, statusType rfc2866.AcctStatusType) {
+	if username == "" || IPAddress == "" {
+		debug("Missing value, not sending - username: " + username + ", IP address: " + IPAddress + ".")
+		return
+	}
 	// Create a new RADIUS accounting packet.
 	packet := radius.New(radius.CodeAccountingRequest, []byte(secret))
 	
