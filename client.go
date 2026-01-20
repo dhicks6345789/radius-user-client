@@ -291,7 +291,7 @@ func main() {
 		}
 	}
 	
-	if arguments["unifiServer"] != "" && arguments["unifiKey"] != "" {
+	if arguments["unifiserver"] != "" && arguments["unifikey"] != "" {
 		pollUnifi = true
 	}
 	
@@ -309,7 +309,7 @@ func main() {
 					}
 					if oldUsername != username || oldIpaddress != ipaddress {
 						// Send the username and IP address to the RADIUS server.
-						sendAccountingPacket(arguments["server"] + ":" + arguments["accountingPort"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
+						sendAccountingPacket(arguments["server"] + ":" + arguments["accountingport"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
 						oldUsername = username
 						oldIpaddress = ipaddress
 					}
