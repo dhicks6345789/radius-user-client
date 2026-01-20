@@ -214,15 +214,15 @@ func main() {
 	arguments["debug"] = "false"
 	arguments["service"] = "false"
 	arguments["daemon"] = "false"
-	arguments["accountingPort"] = "1813"
+	arguments["accountingport"] = "1813"
 	arguments["username"] = ""
 	arguments["ipaddress"] = ""
 	arguments["domain"] = ""
 	arguments["server"] = ""
-	arguments["unifiServer"] = ""
-	arguments["unifiKey"] = ""
-	arguments["userCheckInterval"] = "30"
-	arguments["serverSendInterval"] = "4"
+	arguments["unifiserver"] = ""
+	arguments["unifikey"] = ""
+	arguments["usercheckinterval"] = "30"
+	arguments["serversendinterval"] = "4"
 	setArgumentIfPathExists("config", []string {"config.txt", "/etc/radiususerclient/config.txt", "/Library/Application Support/RADIUSUserClient/config.txt", "C:\\Program Files\\RadiusUserClient\\config.txt"})
 	
 	// Parse any command line arguments.
