@@ -15,6 +15,7 @@ import (
 	"context"
 	"io/ioutil"
 	"crypto/sha256"
+	"encoding/hex"
 
 	// A YAML parser.
 	"gopkg.in/yaml.v3"
@@ -196,10 +197,10 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 	// Other filters / gateways might expect different / additional fields - device ID (possibly the device MAC address) or a unique session ID of some sort.
 	rfc2866.AcctStatusType_Add(packet, statusType)
 	
-    sessionID := sha256.Sum256([]byte(username + IPAddress))
-    fmt.Printf("SHA256: %x\n", sessionID)
+    sessionID := hex.EncodeToString(sha256.Sum256([]byte(username + IPAddress)))
+    debug("SessionID: " + sessionID)
 	
-	rfc2866.AcctSessionID_SetString(packet, "unique-session-1234")
+	rfc2866.AcctSessionID_SetString(packet, sessionID)
 	rfc2865.UserName_SetString(packet, username)
 	rfc2865.FramedIPAddress_Add(packet, net.ParseIP(IPAddress))
 	
