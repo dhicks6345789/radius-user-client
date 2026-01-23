@@ -197,11 +197,11 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 	// Other filters / gateways might expect different / additional fields - device ID (possibly the device MAC address) or a unique session ID of some sort.
 	rfc2866.AcctStatusType_Add(packet, statusType)
 	
-	//var sessionIDHash [32]byte = sha256.Sum256([]byte(username + IPAddress))
-	sessionID := hex.EncodeToString(sha256.Sum256([]byte(username + IPAddress))[:])
-    debug("SessionID: " + sessionID)
+	var sessionIDHash [32]byte = sha256.Sum256([]byte(username + IPAddress))
+	var sessionIDString string = hex.EncodeToString(sessionIDHash[:])
+    debug("SessionID: " + sessionIDString)
 	
-	rfc2866.AcctSessionID_SetString(packet, sessionID)
+	rfc2866.AcctSessionID_SetString(packet, sessionIDString)
 	rfc2865.UserName_SetString(packet, username)
 	rfc2865.FramedIPAddress_Add(packet, net.ParseIP(IPAddress))
 	
