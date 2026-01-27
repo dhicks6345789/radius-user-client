@@ -218,9 +218,22 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 
 // Sends a JSON update to the specified server.
 func sendJSONPacket(serverAddr string, secret string, username string, IPAddress string) {
-	debug("Sending JSON to server: " + serverAddr + secret + username + IPAddress)
-}
+	debug("Sending JSON to server " + serverAddr + ": " + secret + username + IPAddress)
 
+    // Send an HTTP POST requestto the specified server.
+    sendJSONResponse, sendJSONErr := http.Post("http://" + serverAddr, "text/plain", bytes.NewBufferString("{" + secret + username + IPAddress "}"))
+	if sendJSONErr != nil {
+		debug("HTTP request to server " + serverAddr + "" failed: " sendJOSNErr.Error())
+		return
+    }
+    defer sendJSONResponse.Body.Close()
+
+    // Read the response returned by the server.
+    //sendJSONResult, _ := io.ReadAll(sendJSONResponse.Body)
+    //fmt.Println("Response Status:", sendJSONResponse.Status)
+    //fmt.Println("Response Body:", string(sendJSONResult))
+}
+			  
 func parseArguments() {
 	// Parse any command line arguments.
 	currentArgKey := ""
