@@ -359,6 +359,9 @@ func main() {
 				http.Error(clientUpdateResponse, "Invalid JSON: " + clientUpdateErr.Error(), http.StatusBadRequest)
 				return
 			}
+			debug(JSONRequest.secret)
+			debug(JSONRequest.username)
+			debug(JSONRequest.IPAddress)
 			clientUpdateResponse.Header().Set("Content-Type", "application/json")
 			fmt.Fprintf(clientUpdateResponse, "{\"result\":\"" + "ok" + "\"}")
 		})
