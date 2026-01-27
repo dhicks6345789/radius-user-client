@@ -216,7 +216,7 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 	}
 }
 
-func parseArguments() string {
+func parseArguments() {
 	// Parse any command line arguments.
 	currentArgKey := ""
 	for _, argVal := range os.Args {
