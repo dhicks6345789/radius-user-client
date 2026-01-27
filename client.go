@@ -227,7 +227,7 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 
 // Sends a JSON update to the specified server.
 func sendJSONPacket(serverAddr string, secret string, username string, IPAddress string) {
-	JSONString := "{\"secret\":\"" + secret + "\",\"username\":\"" + username + "\",\"ipaddress\":" + IPAddress + "\"}"
+	JSONString := "{\"secret\":\"" + secret + "\",\"username\":\"" + username + "\",\"ipaddress\":\"" + IPAddress + "\"}"
 	debug("Sending JSON to server " + serverAddr + ": " + JSONString)
 
     // Send an HTTP POST request to the specified server.
