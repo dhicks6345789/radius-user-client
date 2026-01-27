@@ -13,9 +13,10 @@ import (
 	"strings"
 	"strconv"
 	"context"
+	"net/http"
 	"io/ioutil"
-	"crypto/sha256"
 	"encoding/hex"
+	"crypto/sha256"
 
 	// A YAML parser.
 	"gopkg.in/yaml.v3"
@@ -215,24 +216,7 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 	}
 }
 
-// The main body of the program. This application can act as both a simple command-line application for sending a one-off RADIUS accounting packet to a given server, and as a service that can periodically check the current user.
-func main() {
-	// Set some default argument values.
-	arguments["help"] = "false"
-	arguments["debug"] = "false"
-	arguments["service"] = "false"
-	arguments["daemon"] = "false"
-	arguments["accountingport"] = "1813"
-	arguments["username"] = ""
-	arguments["ipaddress"] = ""
-	arguments["domain"] = ""
-	arguments["server"] = ""
-	arguments["unifiserver"] = ""
-	arguments["unifikey"] = ""
-	arguments["usercheckinterval"] = "30"
-	arguments["serversendinterval"] = "4"
-	setArgumentIfPathExists("config", []string {"config.txt", "/etc/radiususerclient/config.txt", "/Library/Application Support/RADIUSUserClient/config.txt", "C:\\Program Files\\RadiusUserClient\\config.txt"})
-	
+func parseArguments() string {
 	// Parse any command line arguments.
 	currentArgKey := ""
 	for _, argVal := range os.Args {
@@ -251,8 +235,33 @@ func main() {
 	if currentArgKey != "" {
 		arguments[strings.ToLower(currentArgKey[2:])] = "true"
 	}
+}
 
+// The main body of the program. This application can act as both a simple command-line application for sending a one-off RADIUS accounting packet to a given server, and as a service that can periodically check the current user.
+func main() {
+	// Set some default argument values.
+	arguments["help"] = "false"
+	arguments["debug"] = "false"
+	arguments["radius"] = "true"
+	arguments["idex"] = "false"
+	arguments["service"] = "false"
+	arguments["daemon"] = "false"
+	arguments["server"] = "false"
+	arguments["accountingport"] = "1813"
+	arguments["username"] = ""
+	arguments["ipaddress"] = ""
+	arguments["domain"] = ""
+	arguments["server"] = ""
+	arguments["unifiserver"] = ""
+	arguments["unifikey"] = ""
+	arguments["usercheckinterval"] = "30"
+	arguments["serversendinterval"] = "4"
+	setArgumentIfPathExists("config", []string {"config.txt", "/etc/radiususerclient/config.txt", "/Library/Application Support/RADIUSUserClient/config.txt", "C:\\Program Files\\RadiusUserClient\\config.txt"})
+	
 	fmt.Println("RADIUS User Client v" + buildVersion + ". \"client --help\" for more details.")
+	
+	// Parse any command-line arguments.
+	parseArguments()
 	
 	// Print the help / usage documentation if the user wanted.
 	if arguments["help"] == "true" {
@@ -269,17 +278,20 @@ func main() {
 		}
 	}
 	
-	// Figure out the username of the current user, unless specifically overridden by a provided command-line parameter.
+	// Figure out the username of the current user, unless specifically overridden by a provided config / command-line parameter.
 	username := arguments["username"]
 	if arguments["username"] == "" {
 		username = getCurrentUser()
 	}
 
-	// Figure out the IP address of the current device, unless specifically overridden by a provided command-line parameter.
+	// Figure out the IP address of the current device, unless specifically overridden by a provided config / command-line parameter.
 	ipaddress := arguments["ipaddress"]
 	if arguments["ipaddress"] == "" {
 		ipaddress = getCurrentIPAddress()
 	}
+
+	// Re-parse any command-line arguments - command-line arguments should override values set in the config file or found by the application.
+	parseArguments()
 
 	// Set the User Check Interval - the number of seconds where the client will check the current username.
 	userCheckInterval, userCheckErr := strconv.Atoi(arguments["usercheckinterval"])
@@ -303,7 +315,14 @@ func main() {
 		pollUnifi = true
 	}
 	
-	if arguments["service"] == "true" || arguments["daemon"] == "true" {
+	if arguments["server"] == "true" {
+		http.HandleFunc("/clientUpdate", func(httpResponse http.ResponseWriter, r *http.Request) {
+			httpResponse.Header().Set("Content-Type", "application/json")
+			fmt.Fprintf(httpResponse, "{\"bananas\":\"" + "apples" + "\"}")
+		})
+		fmt.Println("Running as server on port 8079...")
+		log.Fatal(http.ListenAndServe(":8079", nil))
+	} else if arguments["service"] == "true" || arguments["daemon"] == "true" {
 		debug("Running as service / daemon.")
 		for {
 			oldUsername := ""
