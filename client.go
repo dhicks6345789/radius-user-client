@@ -220,16 +220,16 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 
 // Sends a JSON update to the specified server.
 func sendJSONPacket(serverAddr string, secret string, username string, IPAddress string) {
-	JSONString := "{\"secret\":\"" + secret + "\",\"username\":\"" + username + "\",\"IPAddress\":" + IPAddress + "\"}"
+	JSONString := "{\"secret\":\"" + secret + "\",\"username\":\"" + username + "\",\"ipaddress\":" + IPAddress + "\"}"
 	debug("Sending JSON to server " + serverAddr + ": " + JSONString)
 
     // Send an HTTP POST request to the specified server.
-    sendJSONResponse, sendJSONErr := http.Post("http://" + serverAddr + "/clientUpdate", "text/plain", bytes.NewBufferString(JSONString))
+    sendJSONResponse, sendJSONErr := http.Post("http://" + serverAddr + "/clientUpdate", "application/json", bytes.NewBufferString(JSONString))
 	if sendJSONErr != nil {
 		debug("HTTP request to server " + serverAddr + " failed: " + sendJSONErr.Error())
 		return
     }
-    //defer sendJSONResponse.Body.Close()
+    defer sendJSONResponse.Body.Close()
 
     // Read and display the response returned by the server.
     sendJSONResult, _ := io.ReadAll(sendJSONResponse.Body)
@@ -342,9 +342,21 @@ func main() {
 	}
 	
 	if arguments["server"] == "true" {
-		http.HandleFunc("/clientUpdate", func(httpResponse http.ResponseWriter, r *http.Request) {
+		http.HandleFunc("/clientUpdate", func(clientUpdateResponse http.ResponseWriter, clientUpdateRequest *http.Request) {
+			//if clientUpdateErr := clientUpdateRequest.ParseForm(); clientUpdateErr != nil {
+				//http.Error(clientUpdateResponse, "Error parsing form", http.StatusBadRequest)
+				//return
+			//}
+			// We expect a JSON string passed in the body of the request, in the form: {"secret":secret, "username":username, "ipaddress":IPAddress}.
+			var JSONUserRequest UserRequest
+			clientUpdateErr := json.NewDecoder(clientUpdateRequest.Body).Decode(&JSONUserRequest)
+			if clientUpdateErr != nil {
+				http.Error(w, "Invalid JSON: ", http.StatusBadRequest)
+				return
+			}
+			
 			httpResponse.Header().Set("Content-Type", "application/json")
-			fmt.Fprintf(httpResponse, "{\"bananas\":\"" + "apples" + "\"}")
+			fmt.Fprintf(httpResponse, "{\"result\":\"" + "ok" + "\"}")
 		})
 		fmt.Println("Running as server on port 8079...")
 		log.Fatal(http.ListenAndServe(":8079", nil))
