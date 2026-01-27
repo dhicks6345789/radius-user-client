@@ -356,11 +356,11 @@ func main() {
 		}
 	} else {
 		if arguments["idex"] == "true" {
+		} else if arguments["json"] == "true" {
+			sendJSONPacket(arguments["server"] + ":" + arguments["accountingport"], arguments["secret"], username, ipaddress)
 		} else if arguments["radius"] == "true" {
 			// Send the username and IP address to the RADIUS server.
 			sendAccountingPacket(arguments["server"] + ":" + arguments["accountingport"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
-		} else if arguments["radius"] == "true" {
-			sendJSONPacket(arguments["server"] + ":" + arguments["accountingport"], arguments["secret"], username, ipaddress)
 		}
 	}
 }
