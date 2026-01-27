@@ -354,11 +354,11 @@ func main() {
 			var JSONRequest ClientUpdateRequest
 			clientUpdateErr := json.NewDecoder(clientUpdateRequest.Body).Decode(&JSONRequest)
 			if clientUpdateErr != nil {
-				http.Error(w, "Invalid JSON: " + clientUpdateRequest.Body, http.StatusBadRequest)
+				http.Error(clientUpdateResponse, "Invalid JSON.", http.StatusBadRequest)
 				return
 			}
-			httpResponse.Header().Set("Content-Type", "application/json")
-			fmt.Fprintf(httpResponse, "{\"result\":\"" + "ok" + "\"}")
+			clientUpdateResponse.Header().Set("Content-Type", "application/json")
+			fmt.Fprintf(clientUpdateResponse, "{\"result\":\"" + "ok" + "\"}")
 		})
 		fmt.Println("Running as server on port 8079...")
 		log.Fatal(http.ListenAndServe(":8079", nil))
