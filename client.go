@@ -45,6 +45,12 @@ var pollUnifi = false
 // A map to store any arguments passed on the command line.
 var arguments = map[string]string{}
 
+type ClientUpdateRequest struct {
+    Secret string `json:"secret"`
+	Username string `json:"username"`
+	IPAddress string `json:"ipaddress"`
+}
+
 // If the "debug" option has been passed on the command line, print the given information to the (local) console.
 func debug(theOutput string) {
 	if arguments["debug"] == "true" {
@@ -344,18 +350,13 @@ func main() {
 	
 	if arguments["server"] == "true" {
 		http.HandleFunc("/clientUpdate", func(clientUpdateResponse http.ResponseWriter, clientUpdateRequest *http.Request) {
-			//if clientUpdateErr := clientUpdateRequest.ParseForm(); clientUpdateErr != nil {
-				//http.Error(clientUpdateResponse, "Error parsing form", http.StatusBadRequest)
-				//return
-			//}
-			// We expect a JSON string passed in the body of the request, in the form: {"secret":secret, "username":username, "ipaddress":IPAddress}.
-			var JSONUserRequest UserRequest
-			clientUpdateErr := json.NewDecoder(clientUpdateRequest.Body).Decode(&JSONUserRequest)
+			// We expect a JSON string passed in the body of the request, in the format: {"secret":secret, "username":username, "ipaddress":IPAddress}.
+			var JSONRequest ClientUpdateRequest
+			clientUpdateErr := json.NewDecoder(clientUpdateRequest.Body).Decode(&JSONRequest)
 			if clientUpdateErr != nil {
-				http.Error(w, "Invalid JSON: ", http.StatusBadRequest)
+				http.Error(w, "Invalid JSON: " + clientUpdateRequest.Body, http.StatusBadRequest)
 				return
 			}
-			
 			httpResponse.Header().Set("Content-Type", "application/json")
 			fmt.Fprintf(httpResponse, "{\"result\":\"" + "ok" + "\"}")
 		})
