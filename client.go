@@ -222,13 +222,13 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 func sendJSONPacket(serverAddr string, secret string, username string, IPAddress string) {
 	debug("Sending JSON to server " + serverAddr + ": " + secret + username + IPAddress)
 
-    // Send an HTTP POST requestto the specified server.
+    // Send an HTTP POST request to the specified server.
     sendJSONResponse, sendJSONErr := http.Post("http://" + serverAddr, "text/plain", bytes.NewBufferString("{" + secret + username + IPAddress + "}"))
 	if sendJSONErr != nil {
 		debug("HTTP request to server " + serverAddr + " failed: " + sendJSONErr.Error())
 		return
     }
-    defer sendJSONResponse.Body.Close()
+    //defer sendJSONResponse.Body.Close()
 
     // Read and display the response returned by the server.
     sendJSONResult, _ := io.ReadAll(sendJSONResponse.Body)
