@@ -225,7 +225,9 @@ func sendJSONPacket(serverAddr string, secret string, username string, IPAddress
 
     // Send an HTTP POST request to the specified server.
     sendJSONResponse, sendJSONErr := http.Post("http://" + serverAddr, "text/plain", bytes.NewBufferString(JSONString))
+	debug("Minus 1!")
 	if sendJSONErr != nil {
+		debug("Zero!")
 		debug("HTTP request to server " + serverAddr + " failed: " + sendJSONErr.Error())
 		return
     }
