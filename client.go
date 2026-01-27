@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"net/http"
 	"time"
 	"bytes"
 	"strings"
@@ -18,6 +19,7 @@ import (
 	"context"
 	"net/http"
 	"encoding/hex"
+	"encoding/json"
 	"crypto/sha256"
 
 	// A YAML parser.
