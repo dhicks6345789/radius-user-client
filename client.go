@@ -300,10 +300,6 @@ func main() {
 	
 	// Parse any command-line arguments.
 	parseArguments()
-
-	if arguments["json"] == "true" {
-		arguments["accountingport"] = "8079"
-	}
 	
 	// Print the help / usage documentation if the user wanted.
 	if arguments["help"] == "true" {
@@ -318,6 +314,10 @@ func main() {
 		for argName, argVal := range readConfigFile(configPath) {
 			arguments[argName] = argVal
 		}
+	}
+
+	if arguments["json"] == "true" {
+		arguments["accountingport"] = "8079"
 	}
 	
 	// Figure out the username of the current user, unless specifically overridden by a provided config / command-line parameter.
