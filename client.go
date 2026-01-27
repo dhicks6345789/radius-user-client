@@ -216,7 +216,7 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 	rfc2865.FramedIPAddress_Add(packet, net.ParseIP(IPAddress))
 	
 	// Exchange the packet with the server - waits for a response.
-	debug("Sending to RADIUS server - username: " + username + ", IP address: " + IPAddress + ".")
+	debug("Sending to RADIUS server " + serverAddr + " - username: " + username + ", IP address: " + IPAddress + ".")
 	response, RADIUSErr := radius.Exchange(context.Background(), packet, serverAddr)
 	if RADIUSErr != nil {
 		debug(fmt.Sprintf("Failed to send packet to RADIUS server: %v", RADIUSErr))
