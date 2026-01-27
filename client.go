@@ -216,6 +216,11 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 	}
 }
 
+// Sends a JSON update to the specified server.
+func sendAccountingPacket(serverAddr string, secret string, username string, IPAddress string) {
+	debug("Sending JSON to server: " + serverAddr + secret + username + IPAddress)
+}
+
 func parseArguments() {
 	// Parse any command line arguments.
 	currentArgKey := ""
@@ -244,6 +249,7 @@ func main() {
 	arguments["debug"] = "false"
 	arguments["radius"] = "true"
 	arguments["idex"] = "false"
+	arguments["json"] = "false"
 	arguments["service"] = "false"
 	arguments["daemon"] = "false"
 	arguments["server"] = "false"
@@ -262,6 +268,10 @@ func main() {
 	
 	// Parse any command-line arguments.
 	parseArguments()
+
+	if arguments["json"] == "true" {
+		arguments["accountingport"] = "8079"
+	}
 	
 	// Print the help / usage documentation if the user wanted.
 	if arguments["help"] == "true" {
@@ -345,7 +355,12 @@ func main() {
 			}
 		}
 	} else {
-		// Send the username and IP address to the RADIUS server.
-		sendAccountingPacket(arguments["server"] + ":" + arguments["accountingport"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
+		if arguments["idex"] == "true" {
+		} else if arguments["radius"] == "true" {
+			// Send the username and IP address to the RADIUS server.
+			sendAccountingPacket(arguments["server"] + ":" + arguments["accountingport"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
+		} else if arguments["radius"] == "true" {
+			sendJSONPacket(arguments["server"] + ":" + arguments["accountingport"], arguments["secret"], username, ipaddress)
+		}
 	}
 }
