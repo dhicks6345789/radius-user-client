@@ -243,6 +243,16 @@ func sendJSONPacket(serverAddr string, secret string, username string, IPAddress
     debug("Response Status: " + string(sendJSONResponse.Status))
     debug("Response Body: " + string(sendJSONResult))
 }
+
+func sendPacket(serverAddr string, username string, ipaddress string) {
+	if arguments["idex"] == "true" {
+	} else if arguments["json"] == "true" {
+		sendJSONPacket(serverAddr, arguments["secret", username, ipaddress)
+	} else if arguments["radius"] == "true" {
+		// Send the username and IP address to the RADIUS server.
+		sendAccountingPacket(serverAddr, arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
+	}
+}
 			  
 func parseArguments() {
 	// Parse any command line arguments.
@@ -336,6 +346,7 @@ func main() {
 		log.Fatalf("Error converting Server Send Interval value to int: %v", serverSendErr)
 	}
 	
+	// If debug mode is on, give a list of arguments.
 	if arguments["debug"] == "true" {
 		fmt.Println("Debug mode set - arguments:")
 		for argName, argVal := range arguments {
@@ -383,8 +394,7 @@ func main() {
 						username = getCurrentUser()
 					}
 					if oldUsername != username || oldIpaddress != ipaddress {
-						// Send the username and IP address to the RADIUS server.
-						sendAccountingPacket(arguments["server"] + ":" + arguments["accountingport"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
+						sendPacket(arguments["server"] + ":" + arguments["accountingport"], username, ipaddress)
 						oldUsername = username
 						oldIpaddress = ipaddress
 					}
@@ -393,12 +403,6 @@ func main() {
 			}
 		}
 	} else {
-		if arguments["idex"] == "true" {
-		} else if arguments["json"] == "true" {
-			sendJSONPacket(arguments["server"] + ":" + arguments["accountingport"], arguments["secret"], username, ipaddress)
-		} else if arguments["radius"] == "true" {
-			// Send the username and IP address to the RADIUS server.
-			sendAccountingPacket(arguments["server"] + ":" + arguments["accountingport"], arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
-		}
+		sendPacket(arguments["server"] + ":" + arguments["accountingport"], username, ipaddress)
 	}
 }
