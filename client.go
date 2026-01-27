@@ -229,10 +229,10 @@ func sendJSONPacket(serverAddr string, secret string, username string, IPAddress
     }
     defer sendJSONResponse.Body.Close()
 
-    // Read the response returned by the server.
-    //sendJSONResult, _ := io.ReadAll(sendJSONResponse.Body)
-    //fmt.Println("Response Status:", sendJSONResponse.Status)
-    //fmt.Println("Response Body:", string(sendJSONResult))
+    // Read and display the response returned by the server.
+    sendJSONResult, _ := io.ReadAll(sendJSONResponse.Body)
+    debug("Response Status: " + string(sendJSONResponse.Status))
+    debug("Response Body: " + string(sendJSONResult))
 }
 			  
 func parseArguments() {
