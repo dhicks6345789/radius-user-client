@@ -220,18 +220,21 @@ func sendAccountingPacket(serverAddr string, secret string, username string, IPA
 
 // Sends a JSON update to the specified server.
 func sendJSONPacket(serverAddr string, secret string, username string, IPAddress string) {
-	debug("Sending JSON to server " + serverAddr + ": " + secret + username + IPAddress)
+	JSONString := "{\"secret\":\"" + secret + "\",\"username\":\"" + username + "\",\"IPAddress\":" + IPAddress + "\"}"
+	debug("Sending JSON to server " + serverAddr + ": " + JSONString)
 
     // Send an HTTP POST request to the specified server.
-    sendJSONResponse, sendJSONErr := http.Post("http://" + serverAddr, "text/plain", bytes.NewBufferString("{" + secret + username + IPAddress + "}"))
+    sendJSONResponse, sendJSONErr := http.Post("http://" + serverAddr, "text/plain", bytes.NewBufferString(JSONString))
 	if sendJSONErr != nil {
 		debug("HTTP request to server " + serverAddr + " failed: " + sendJSONErr.Error())
 		return
     }
+	debug("One!")
     //defer sendJSONResponse.Body.Close()
 
     // Read and display the response returned by the server.
     sendJSONResult, _ := io.ReadAll(sendJSONResponse.Body)
+	debug("Two!")
     debug("Response Status: " + string(sendJSONResponse.Status))
     debug("Response Body: " + string(sendJSONResult))
 }
