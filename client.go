@@ -359,8 +359,13 @@ func main() {
 				http.Error(clientUpdateResponse, "Invalid JSON: " + clientUpdateErr.Error(), http.StatusBadRequest)
 				return
 			}
+			if JSONRequest.Secret != arguments["secret"] {
+				debug("Invalid secret passed from client: " + JSONRequest.Secret)
+				http.Error(clientUpdateResponse, "Invalid secret: " + JSONRequest.Secret, http.StatusBadRequest)
+				return
+			}
 			debug("Parsed JSONrequest: " + JSONRequest.Secret + ", " + JSONRequest.Username + ", " + JSONRequest.IPAddress)
-			sendAccountingPacket(arguments["server"] + ":" + arguments["accountingport"], JSONRequest.Secret, JSONRequest.Username, JSONRequest.IPAddress, rfc2866.AcctStatusType_Value_Start)
+			sendAccountingPacket(arguments["server"] + ":" + arguments["accountingport"], arguments["secret"], JSONRequest.Username, JSONRequest.IPAddress, rfc2866.AcctStatusType_Value_Start)
 			clientUpdateResponse.Header().Set("Content-Type", "application/json")
 			fmt.Fprintf(clientUpdateResponse, "{\"result\":\"" + "ok" + "\"}")
 		})
