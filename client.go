@@ -275,7 +275,7 @@ func main() {
 	arguments["json"] = "false"
 	arguments["service"] = "false"
 	arguments["daemon"] = "false"
-	arguments["server"] = "false"
+	arguments["jsonserver"] = "false"
 	arguments["accountingport"] = "1813"
 	arguments["username"] = ""
 	arguments["ipaddress"] = ""
@@ -348,7 +348,7 @@ func main() {
 		pollUnifi = true
 	}
 	
-	if arguments["server"] == "true" {
+	if arguments["jsonserver"] == "true" {
 		http.HandleFunc("/clientUpdate", func(clientUpdateResponse http.ResponseWriter, clientUpdateRequest *http.Request) {
 			// We expect a JSON string passed in the body of the request, in the format: {"secret":secret, "username":username, "ipaddress":IPAddress}.
 			var JSONRequest ClientUpdateRequest
@@ -359,9 +359,8 @@ func main() {
 				http.Error(clientUpdateResponse, "Invalid JSON: " + clientUpdateErr.Error(), http.StatusBadRequest)
 				return
 			}
-			debug(JSONRequest.Secret)
-			debug(JSONRequest.Username)
-			debug(JSONRequest.IPAddress)
+			debug("Parsed JSONrequest: " + JSONRequest.Secret + ", " + JSONRequest.Username + ", " + JSONRequest.IPAddress)
+			sendAccountingPacket(arguments["server"] + ":" + arguments["accountingport"], JSONRequest.Secret, JSONRequest.Username, JSONRequest.IPAddress, rfc2866.AcctStatusType_Value_Start)
 			clientUpdateResponse.Header().Set("Content-Type", "application/json")
 			fmt.Fprintf(clientUpdateResponse, "{\"result\":\"" + "ok" + "\"}")
 		})
