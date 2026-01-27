@@ -17,7 +17,6 @@ import (
 	"strings"
 	"strconv"
 	"context"
-	"net/http"
 	"encoding/hex"
 	"encoding/json"
 	"crypto/sha256"
