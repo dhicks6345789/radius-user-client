@@ -4,6 +4,8 @@ package main
 
 import (
 	// Standard libraries.
+	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"fmt"
@@ -15,7 +17,6 @@ import (
 	"strconv"
 	"context"
 	"net/http"
-	"io/ioutil"
 	"encoding/hex"
 	"crypto/sha256"
 
