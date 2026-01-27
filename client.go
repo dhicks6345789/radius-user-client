@@ -38,7 +38,7 @@ var getUserMethod = 0
 var getIPMethod = 0
 
 // If running in service mode, this application can act as an intermidiate service between UniFi and your (Smoothwall, etc) RADIUS accounting server.
-// If the unifiServer and unifiKey arguments are set, either at the command line or in a config file, the application will poll the UniFi server
+// If the unifiKey argument is set, either at the command line or in a config file, the application will poll the UniFi server
 // for new user logons and inform the RADIUS server.
 var pollUnifi = false
 
@@ -281,7 +281,6 @@ func main() {
 	arguments["ipaddress"] = ""
 	arguments["domain"] = ""
 	arguments["server"] = ""
-	arguments["unifiserver"] = ""
 	arguments["unifikey"] = ""
 	arguments["usercheckinterval"] = "30"
 	arguments["serversendinterval"] = "4"
@@ -344,7 +343,7 @@ func main() {
 		}
 	}
 	
-	if arguments["unifiserver"] != "" && arguments["unifikey"] != "" {
+	if arguments["unifikey"] != "" {
 		pollUnifi = true
 	}
 	
