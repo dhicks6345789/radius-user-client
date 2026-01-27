@@ -247,7 +247,7 @@ func sendJSONPacket(serverAddr string, secret string, username string, IPAddress
 func sendPacket(serverAddr string, username string, ipaddress string) {
 	if arguments["idex"] == "true" {
 	} else if arguments["json"] == "true" {
-		sendJSONPacket(serverAddr, arguments["secret", username, ipaddress)
+		sendJSONPacket(serverAddr, arguments["secret"], username, ipaddress)
 	} else if arguments["radius"] == "true" {
 		// Send the username and IP address to the RADIUS server.
 		sendAccountingPacket(serverAddr, arguments["secret"], username, ipaddress, rfc2866.AcctStatusType_Value_Start)
