@@ -160,9 +160,17 @@ func getCurrentIPAddress() string {
 		ipconfigCmd := exec.Command("cmd", "/C", "ipconfig | findstr /c:IPv4")
 		ipconfigOut, _ := ipconfigCmd.CombinedOutput()
 		ipconfigResult := string(ipconfigOut)
-		lineSplit := strings.Split(ipconfigResult, ":")
-		if len(lineSplit) > 1 {
-			IPAddress = strings.TrimSpace(lineSplit[1])
+		ipconfigResult = strings.ReplaceAll(ipconfigResult, "IPv4 Address", "")
+		ipconfigResult = strings.ReplaceAll(ipconfigResult, ". ", "")
+		ipconfigResult = strings.ReplaceAll(ipconfigResult, ":", "")
+		ipconfigResult = strings.ReplaceAll(ipconfigResult, " ", "")
+		//lineSplit := strings.Split(ipconfigResult, ":")
+		//if len(lineSplit) > 1 {
+			//IPAddress = strings.TrimSpace(lineSplit[1])
+			//getIPMethod = 1
+		//}
+		if ipconfigResult != "" {
+			IPAddress = ipconfigResult
 			getIPMethod = 1
 		}
 	}
