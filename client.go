@@ -162,7 +162,7 @@ func getCurrentIPAddress() string {
 		ipconfigInterface := 0
 		ipconfigCmd := exec.Command("cmd", "/C", "ipconfig")
 		ipconfigOut, _ := ipconfigCmd.CombinedOutput()
-		ipconfigScanner := bufio.NewScanner(strings.NewReader(ipconfigOut))
+		ipconfigScanner := bufio.NewScanner(strings.NewReader(string(ipconfigOut)))
 		for ipconfigScanner.Scan() {
 			ipconfigLine := ipconfigScanner.Text()
 			if strings.HasPrefix(ipconfigLine, "Ethernet") {
