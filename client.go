@@ -157,7 +157,7 @@ func getCurrentIPAddress() string {
 
 	// Try "ipconfig", should work on Windows.
 	if getIPMethod == 0 || getIPMethod == 1 {
-		ipconfigInterfaces = [2]string{"", ""}
+		ipconfigInterfaces := [2]string{"", ""}
 		ipconfigInterface := 0
 		ipconfigCmd := exec.Command("cmd", "/C", "ipconfig")
 		ipconfigOut, _ := ipconfigCmd.CombinedOutput()
