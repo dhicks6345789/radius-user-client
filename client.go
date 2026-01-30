@@ -363,11 +363,18 @@ func main() {
 			// We expect a JSON string passed in the body of the request, in the format: {"secret":secret, "username":username, "ipaddress":IPAddress}.
 			var JSONRequest ClientUpdateRequest
 			debug("clientUpdate request received - parsing request JSON string.")
-			jsonDecoder := json.NewDecoder(clientUpdateRequest.Body)
+			
+			// Copy the JSON reader into a buffer so we can use it twice.
+			var jsonBuffer bytes.Buffer
+			jsonTee := io.TeeReader(clientUpdateRequest.Body, &jsonBuffer)
+			
+			// Decode the request's JSON...
+			jsonDecoder := json.NewDecoder(jsonTee)
 			clientUpdateErr := jsonDecoder.Decode(&JSONRequest)
+			// ...if there's an error, we can show the original JSON request.
 			if clientUpdateErr != nil {
 				debug("Invalid JSON: " + clientUpdateErr.Error())
-				debug(string(jsonDecoder))
+				debug(jsonBuffer.String())
 				http.Error(clientUpdateResponse, "Invalid JSON: " + clientUpdateErr.Error(), http.StatusBadRequest)
 				return
 			}
