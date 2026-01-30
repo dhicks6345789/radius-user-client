@@ -363,10 +363,11 @@ func main() {
 			// We expect a JSON string passed in the body of the request, in the format: {"secret":secret, "username":username, "ipaddress":IPAddress}.
 			var JSONRequest ClientUpdateRequest
 			debug("clientUpdate request received - parsing request JSON string.")
-			clientUpdateErr := json.NewDecoder(clientUpdateRequest.Body).Decode(&JSONRequest)
+			jsonDecoder := json.NewDecoder(clientUpdateRequest.Body)
+			clientUpdateErr := jsonDecoder.Decode(&JSONRequest)
 			if clientUpdateErr != nil {
 				debug("Invalid JSON: " + clientUpdateErr.Error())
-				debug(string(clientUpdateRequest.Body))
+				debug(string(jsonDecoder))
 				http.Error(clientUpdateResponse, "Invalid JSON: " + clientUpdateErr.Error(), http.StatusBadRequest)
 				return
 			}
