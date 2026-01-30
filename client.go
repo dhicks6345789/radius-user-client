@@ -157,20 +157,28 @@ func getCurrentIPAddress() string {
 
 	// Try "ipconfig", should work on Windows.
 	if getIPMethod == 0 || getIPMethod == 1 {
-		ipconfigCmd := exec.Command("cmd", "/C", "ipconfig | findstr /c:IPv4")
+		ipconfigInterfaces = string["", ""]
+		ipconfigInterface := 0
+		ipconfigCmd := exec.Command("cmd", "/C", "ipconfig")
 		ipconfigOut, _ := ipconfigCmd.CombinedOutput()
-		ipconfigResult := string(ipconfigOut)
-		ipconfigResult = strings.ReplaceAll(ipconfigResult, "IPv4 Address", "")
-		ipconfigResult = strings.ReplaceAll(ipconfigResult, ". ", "")
-		ipconfigResult = strings.ReplaceAll(ipconfigResult, ":", "")
-		ipconfigResult = strings.ReplaceAll(ipconfigResult, " ", "")
-		//lineSplit := strings.Split(ipconfigResult, ":")
-		//if len(lineSplit) > 1 {
-			//IPAddress = strings.TrimSpace(lineSplit[1])
-			//getIPMethod = 1
-		//}
-		if ipconfigResult != "" {
-			IPAddress = strings.TrimSpace(ipconfigResult)
+		ipconfigScanner := bufio.NewScanner(strings.NewReader(ipconfigOut))
+		for ipconfigScanner.Scan() {
+			ipconfigLine := ipconfigScanner.Text()
+			if strings.HasPrefix(ipconfigLine, "Ethernet") {
+				ipconfigInterface = 0
+			}
+			if strings.HasPrefix(ipconfigLine, "Wireless") {
+				ipconfigInterface = 1
+			}
+			if strings.HasPrefix(ipconfigLine, "   Ipv4") {
+				ipconfigInterfaces[ipconfigInterface] := strings.TrimSpace(strings.Split(ipconfigLine, ":")[1])
+			}
+		}
+		if ipconfigInterfaces[0] != "" {
+			IPAddress = ipconfigInterfaces[0]
+			getIPMethod = 1
+		} else if ipconfigInterfaces[1] != "" {
+			IPAddress = ipconfigInterfaces[1]
 			getIPMethod = 1
 		}
 	}
