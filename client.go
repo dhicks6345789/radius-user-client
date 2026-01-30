@@ -172,7 +172,7 @@ func getCurrentIPAddress() string {
 				ipconfigInterface = 1
 			}
 			if strings.HasPrefix(ipconfigLine, "   Ipv4") {
-				ipconfigInterfaces[ipconfigInterface] := strings.TrimSpace(strings.Split(ipconfigLine, ":")[1])
+				ipconfigInterfaces[ipconfigInterface] = strings.TrimSpace(strings.Split(ipconfigLine, ":")[1])
 			}
 		}
 		if ipconfigInterfaces[0] != "" {
