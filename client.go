@@ -5,6 +5,7 @@ package main
 import (
 	// Standard libraries.
 	"io"
+	"bufio"
 	"io/ioutil"
 	"os"
 	"os/exec"
