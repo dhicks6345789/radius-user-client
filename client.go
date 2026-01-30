@@ -366,6 +366,7 @@ func main() {
 			clientUpdateErr := json.NewDecoder(clientUpdateRequest.Body).Decode(&JSONRequest)
 			if clientUpdateErr != nil {
 				debug("Invalid JSON: " + clientUpdateErr.Error())
+				debug(string(clientUpdateRequest.Body))
 				http.Error(clientUpdateResponse, "Invalid JSON: " + clientUpdateErr.Error(), http.StatusBadRequest)
 				return
 			}
