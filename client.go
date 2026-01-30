@@ -171,7 +171,7 @@ func getCurrentIPAddress() string {
 			if strings.HasPrefix(ipconfigLine, "Wireless") {
 				ipconfigInterface = 1
 			}
-			if strings.HasPrefix(ipconfigLine, "   Ipv4") {
+			if strings.HasPrefix(ipconfigLine, "   IPv4") {
 				ipconfigInterfaces[ipconfigInterface] = strings.TrimSpace(strings.Split(ipconfigLine, ":")[1])
 			}
 		}
