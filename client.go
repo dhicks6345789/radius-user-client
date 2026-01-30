@@ -170,7 +170,7 @@ func getCurrentIPAddress() string {
 			//getIPMethod = 1
 		//}
 		if ipconfigResult != "" {
-			IPAddress = ipconfigResult
+			IPAddress = strings.TrimSpace(ipconfigResult)
 			getIPMethod = 1
 		}
 	}
