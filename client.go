@@ -282,6 +282,7 @@ func sendIDEXPacket(serverAddr string, username string, IPAddress string) {
 
 
 func sendPacket(serverAddr string, username string, ipaddress string) {
+	debug("Sendpacket - idex: " + arguments["idex"])
 	if arguments["idex"] == "true" {
 		sendIDEXPacket(serverAddr, username, ipaddress)
 	} else if arguments["json"] == "true" {
