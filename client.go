@@ -281,7 +281,8 @@ func sendIDEXPacket(serverAddr string, username string, IPAddress string) {
 }
 
 
-func sendPacket(serverAddr string, username string, ipaddress string) {
+func sendPacket(username string, ipaddress string) {
+	serverAddr := arguments["server"] + ":" + arguments["accountingport"]
 	debug("Sendpacket - idex: " + arguments["idex"])
 	if arguments["idex"] == "true" {
 		sendIDEXPacket(serverAddr, username, ipaddress)
@@ -423,7 +424,7 @@ func main() {
 				return
 			}
 			debug("Parsed JSONrequest: " + JSONRequest.Secret + ", " + JSONRequest.Username + ", " + JSONRequest.IPAddress)
-			sendPacket(arguments["server"] + ":" + arguments["accountingport"], JSONRequest.Username, JSONRequest.IPAddress)
+			sendPacket(JSONRequest.Username, JSONRequest.IPAddress)
 			clientUpdateResponse.Header().Set("Content-Type", "application/json")
 			fmt.Fprintf(clientUpdateResponse, "{\"result\":\"" + "ok" + "\"}")
 		})
@@ -442,7 +443,7 @@ func main() {
 						username = getCurrentUser()
 					}
 					if oldUsername != username || oldIpaddress != ipaddress {
-						sendPacket(arguments["server"] + ":" + arguments["accountingport"], username, ipaddress)
+						sendPacket(username, ipaddress)
 						oldUsername = username
 						oldIpaddress = ipaddress
 					}
@@ -451,6 +452,6 @@ func main() {
 			}
 		}
 	} else {
-		sendPacket(arguments["server"] + ":" + arguments["accountingport"], username, ipaddress)
+		sendPacket(username, ipaddress)
 	}
 }
