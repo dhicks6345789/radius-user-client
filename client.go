@@ -262,7 +262,7 @@ func sendJSONPacket(serverAddr string, secret string, username string, IPAddress
 }
 
 // Sends an iDex packet to the specified server.
-func sendJSONPacket(serverAddr string, username string, IPAddress string) {
+func sendIDEXPacket(serverAddr string, username string, IPAddress string) {
 	JSONString := "{\"username\":\"" + username + "\",\"ipaddress\":\"" + IPAddress + "\"}"
 	debug("Sending iDex to server " + serverAddr + ": " + JSONString)
 
