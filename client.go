@@ -423,7 +423,7 @@ func main() {
 				return
 			}
 			debug("Parsed JSONrequest: " + JSONRequest.Secret + ", " + JSONRequest.Username + ", " + JSONRequest.IPAddress)
-			sendAccountingPacket(arguments["server"] + ":" + arguments["accountingport"], arguments["secret"], JSONRequest.Username, JSONRequest.IPAddress, rfc2866.AcctStatusType_Value_Start)
+			sendPacket(arguments["server"] + ":" + arguments["accountingport"], arguments["secret"], JSONRequest.Username, JSONRequest.IPAddress, rfc2866.AcctStatusType_Value_Start)
 			clientUpdateResponse.Header().Set("Content-Type", "application/json")
 			fmt.Fprintf(clientUpdateResponse, "{\"result\":\"" + "ok" + "\"}")
 		})
