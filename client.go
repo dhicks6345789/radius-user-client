@@ -263,24 +263,25 @@ func sendJSONPacket(serverAddr string, secret string, username string, IPAddress
 
 // Sends an iDex packet to the specified server.
 func sendIDEXPacket(serverAddr string, username string, IPAddress string) {
-	JSONString := "{\"username\":\"" + username + "\",\"ipaddress\":\"" + IPAddress + "\"}"
+	// {"knightsbridgeschool.com":{"logins":[["192.168.1.151","d.hicks"]]}}
+	JSONString := "{\"" + arguments["domain"] + "\":{\"logins\":[[\"" + IPAddress + "\",\"" + username + "\"]]}}"
 	debug("Sending iDex packet to server " + serverAddr + ": " + JSONString)
 
     // Send an HTTP POST request to the specified server.
-    //sendJSONResponse, sendJSONErr := http.Post("http://" + serverAddr + "/clientUpdate", "application/json", bytes.NewBufferString(JSONString))
-	//if sendJSONErr != nil {
-		//debug("HTTP request to server " + serverAddr + " failed: " + sendJSONErr.Error())
-		//return
-    //}
-    //defer sendJSONResponse.Body.Close()
+    sendJSONResponse, sendJSONErr := http.Post("http://" + serverAddr + "/clientUpdate", "application/json", bytes.NewBufferString(JSONString))
+	if sendJSONErr != nil {
+		debug("HTTP request to server " + serverAddr + " failed: " + sendJSONErr.Error())
+		return
+    }
+    defer sendJSONResponse.Body.Close()
 
     // Read and display the response returned by the server.
-    //sendJSONResult, _ := io.ReadAll(sendJSONResponse.Body)
-    //debug("Response Status: " + string(sendJSONResponse.Status))
-    //debug("Response Body: " + string(sendJSONResult))
+    sendJSONResult, _ := io.ReadAll(sendJSONResponse.Body)
+    debug("Response Status: " + string(sendJSONResponse.Status))
+    debug("Response Body: " + string(sendJSONResult))
 }
 
-
+// Send a packet to the appropriate destination according to the protocol selected by argument switches.
 func sendPacket(username string, ipaddress string) {
 	serverAddr := arguments["server"] + ":" + arguments["accountingport"]
 	if arguments["idex"] == "true" {
@@ -357,6 +358,10 @@ func main() {
 
 	if arguments["json"] == "true" {
 		arguments["accountingport"] = "8079"
+	}
+
+	if arguments["idex"] == "true" {
+		arguments["accountingport"] = "2948"
 	}
 	
 	// Figure out the username of the current user, unless specifically overridden by a provided config / command-line parameter.
