@@ -268,7 +268,7 @@ func sendIDEXPacket(serverAddr string, username string, IPAddress string) {
 	debug("Sending iDex packet to server " + serverAddr + ": " + JSONString)
 
     // Send an HTTP POST request to the specified server.
-    sendJSONResponse, sendJSONErr := http.Post("http://" + serverAddr + "/clientUpdate", "application/json", bytes.NewBufferString(JSONString))
+    sendJSONResponse, sendJSONErr := http.Post("http://" + serverAddr + "/agent/v1", "application/json", bytes.NewBufferString(JSONString))
 	if sendJSONErr != nil {
 		debug("HTTP request to server " + serverAddr + " failed: " + sendJSONErr.Error())
 		return
