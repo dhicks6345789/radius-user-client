@@ -264,7 +264,7 @@ func sendJSONPacket(serverAddr string, secret string, username string, IPAddress
 // Sends an iDex packet to the specified server.
 func sendIDEXPacket(serverAddr string, username string, IPAddress string) {
 	JSONString := "{\"username\":\"" + username + "\",\"ipaddress\":\"" + IPAddress + "\"}"
-	debug("Sending iDex to server " + serverAddr + ": " + JSONString)
+	debug("Sending iDex packet to server " + serverAddr + ": " + JSONString)
 
     // Send an HTTP POST request to the specified server.
     //sendJSONResponse, sendJSONErr := http.Post("http://" + serverAddr + "/clientUpdate", "application/json", bytes.NewBufferString(JSONString))
@@ -283,7 +283,6 @@ func sendIDEXPacket(serverAddr string, username string, IPAddress string) {
 
 func sendPacket(username string, ipaddress string) {
 	serverAddr := arguments["server"] + ":" + arguments["accountingport"]
-	debug("Sendpacket - idex: " + arguments["idex"])
 	if arguments["idex"] == "true" {
 		sendIDEXPacket(serverAddr, username, ipaddress)
 	} else if arguments["json"] == "true" {
