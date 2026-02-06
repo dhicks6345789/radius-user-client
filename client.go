@@ -370,10 +370,18 @@ func main() {
 		username = getCurrentUser()
 	}
 
+	if arguments["username"] == "true" {
+		log.Fatalf("Username set to \"true\" - exiting.")
+	}
+
 	// Figure out the IP address of the current device, unless specifically overridden by a provided config / command-line parameter.
 	ipaddress := arguments["ipaddress"]
 	if arguments["ipaddress"] == "" {
 		ipaddress = getCurrentIPAddress()
+	}
+
+	if arguments["ipaddress"] == "true" {
+		log.Fatalf("IP Address set to \"true\" - exiting.")
 	}
 
 	// Re-parse any command-line arguments - command-line arguments should override values set in the config file or found by the application.
